@@ -4,7 +4,7 @@ Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.08 secs
+Total CPU time to Xst completion: 0.47 secs
  
 --> 
 TABLE OF CONTENTS
@@ -94,8 +94,8 @@ Elaborating entity <battle_city_periph> (architecture <IMP>) with generics from 
 Elaborating entity <vga_ctrl> (architecture <arch_v1>) from library <battle_city_periph_v1_01_a>.
 
 Elaborating entity <battle_city> (architecture <Behavioral>) with generics from library <battle_city_periph_v1_01_a>.
-WARNING:HDLCompiler:1127 - "D:/materija/RA218-2015/LPRS2/projekat/new_rally_x/battle_city_design/pcores/battle_city_periph_v1_01_a/hdl/vhdl/battle_city.vhd" Line 505: Assignment to img_addr_r7 ignored, since the identifier is never used
-WARNING:HDLCompiler:1127 - "D:/materija/RA218-2015/LPRS2/projekat/new_rally_x/battle_city_design/pcores/battle_city_periph_v1_01_a/hdl/vhdl/battle_city.vhd" Line 633: Assignment to reg_intsect_r13 ignored, since the identifier is never used
+WARNING:HDLCompiler:1127 - "D:/materija/RA218-2015/LPRS2/projekat/new_rally_x/battle_city_design/pcores/battle_city_periph_v1_01_a/hdl/vhdl/battle_city.vhd" Line 506: Assignment to img_addr_r7 ignored, since the identifier is never used
+WARNING:HDLCompiler:1127 - "D:/materija/RA218-2015/LPRS2/projekat/new_rally_x/battle_city_design/pcores/battle_city_periph_v1_01_a/hdl/vhdl/battle_city.vhd" Line 634: Assignment to reg_intsect_r13 ignored, since the identifier is never used
 
 Elaborating entity <ram> (architecture <arch>) with generics from library <battle_city_periph_v1_01_a>.
 
@@ -253,95 +253,95 @@ WARNING:Xst:647 - Input <rst_n_i> is never used. This port will be preserved and
     Found 64-bit register for signal <registers_s<0>>.
     Found 8-bit register for signal <palette_addr_r15_dummy[7:0]>.
     Found 8-bit register for signal <palette_addr_r16>.
-    Found 9-bit adder for signal <reg_end_row_s<0>> created at line 342.
-    Found 10-bit adder for signal <reg_end_col_s<0>> created at line 343.
-    Found 9-bit adder for signal <reg_end_row_s<1>> created at line 342.
-    Found 10-bit adder for signal <reg_end_col_s<1>> created at line 343.
-    Found 9-bit adder for signal <reg_end_row_s<2>> created at line 342.
-    Found 10-bit adder for signal <reg_end_col_s<2>> created at line 343.
-    Found 9-bit adder for signal <reg_end_row_s<3>> created at line 342.
-    Found 10-bit adder for signal <reg_end_col_s<3>> created at line 343.
-    Found 9-bit adder for signal <reg_end_row_s<4>> created at line 342.
-    Found 10-bit adder for signal <reg_end_col_s<4>> created at line 343.
-    Found 9-bit adder for signal <reg_end_row_s<5>> created at line 342.
-    Found 10-bit adder for signal <reg_end_col_s<5>> created at line 343.
-    Found 9-bit adder for signal <reg_end_row_s<6>> created at line 342.
-    Found 10-bit adder for signal <reg_end_col_s<6>> created at line 343.
-    Found 9-bit adder for signal <reg_end_row_s<7>> created at line 342.
-    Found 10-bit adder for signal <reg_end_col_s<7>> created at line 343.
-    Found 9-bit adder for signal <reg_end_row_s<8>> created at line 342.
-    Found 10-bit adder for signal <reg_end_col_s<8>> created at line 343.
-    Found 9-bit adder for signal <reg_end_row_s<9>> created at line 342.
-    Found 10-bit adder for signal <reg_end_col_s<9>> created at line 343.
-    Found 13-bit adder for signal <n1383> created at line 379.
-    Found 13-bit adder for signal <map_index_s0> created at line 379.
+    Found 9-bit adder for signal <reg_end_row_s<0>> created at line 346.
+    Found 10-bit adder for signal <reg_end_col_s<0>> created at line 347.
+    Found 9-bit adder for signal <reg_end_row_s<1>> created at line 346.
+    Found 10-bit adder for signal <reg_end_col_s<1>> created at line 347.
+    Found 9-bit adder for signal <reg_end_row_s<2>> created at line 346.
+    Found 10-bit adder for signal <reg_end_col_s<2>> created at line 347.
+    Found 9-bit adder for signal <reg_end_row_s<3>> created at line 346.
+    Found 10-bit adder for signal <reg_end_col_s<3>> created at line 347.
+    Found 9-bit adder for signal <reg_end_row_s<4>> created at line 346.
+    Found 10-bit adder for signal <reg_end_col_s<4>> created at line 347.
+    Found 9-bit adder for signal <reg_end_row_s<5>> created at line 346.
+    Found 10-bit adder for signal <reg_end_col_s<5>> created at line 347.
+    Found 9-bit adder for signal <reg_end_row_s<6>> created at line 346.
+    Found 10-bit adder for signal <reg_end_col_s<6>> created at line 347.
+    Found 9-bit adder for signal <reg_end_row_s<7>> created at line 346.
+    Found 10-bit adder for signal <reg_end_col_s<7>> created at line 347.
+    Found 9-bit adder for signal <reg_end_row_s<8>> created at line 346.
+    Found 10-bit adder for signal <reg_end_col_s<8>> created at line 347.
+    Found 9-bit adder for signal <reg_end_row_s<9>> created at line 346.
+    Found 10-bit adder for signal <reg_end_col_s<9>> created at line 347.
+    Found 13-bit adder for signal <n1383> created at line 383.
+    Found 13-bit adder for signal <map_index_s0> created at line 383.
     Found 13-bit adder for signal <map_addr_s0> created at line 1241.
-    Found 13-bit adder for signal <img_pix_addr_s6> created at line 497.
-    Found 13-bit adder for signal <sprt_addr_s9> created at line 580.
-    Found 4-bit subtractor for signal <GND_8_o_GND_8_o_sub_182_OUT<3:0>> created at line 450.
-    Found 4-bit subtractor for signal <GND_8_o_GND_8_o_sub_183_OUT<3:0>> created at line 451.
+    Found 13-bit adder for signal <img_pix_addr_s6> created at line 498.
+    Found 13-bit adder for signal <sprt_addr_s9> created at line 581.
+    Found 4-bit subtractor for signal <GND_8_o_GND_8_o_sub_182_OUT<3:0>> created at line 451.
+    Found 4-bit subtractor for signal <GND_8_o_GND_8_o_sub_183_OUT<3:0>> created at line 452.
     Found 4-bit subtractor for signal <sprt_int_row_s6<3:0>> created at line 211.
     Found 4-bit subtractor for signal <sprt_int_col_s6<3:0>> created at line 210.
-    Found 4-bit subtractor for signal <GND_8_o_GND_8_o_sub_230_OUT<3:0>> created at line 530.
-    Found 4-bit subtractor for signal <GND_8_o_GND_8_o_sub_232_OUT<3:0>> created at line 529.
+    Found 4-bit subtractor for signal <GND_8_o_GND_8_o_sub_230_OUT<3:0>> created at line 531.
+    Found 4-bit subtractor for signal <GND_8_o_GND_8_o_sub_232_OUT<3:0>> created at line 530.
     Found 13-bit subtractor for signal <reg_word_addr> created at line 76.
-    Found 4-bit 10-to-1 multiplexer for signal <max_s6> created at line 499.
-    Found 8-bit 10-to-1 multiplexer for signal <rot_s6> created at line 500.
-    Found 9-bit 10-to-1 multiplexer for signal <reg_intersected_r6[3]_X_8_o_wide_mux_210_OUT> created at line 502.
-    Found 10-bit 10-to-1 multiplexer for signal <reg_intersected_r6[3]_X_8_o_wide_mux_212_OUT> created at line 503.
-    Found 8-bit 4-to-1 multiplexer for signal <img_color_idx_s9> created at line 573.
-    Found 16-bit 10-to-1 multiplexer for signal <n1239> created at line 580.
-    Found 8-bit 4-to-1 multiplexer for signal <spr_color_idx_s12> created at line 626.
-    Found 1-bit 10-to-1 multiplexer for signal <reg_intersected_r13[3]_X_8_o_Mux_279_o> created at line 650.
-    Found 13-bit 4-to-1 multiplexer for signal <mem_addr_s> created at line 696.
+    Found 4-bit 10-to-1 multiplexer for signal <max_s6> created at line 500.
+    Found 8-bit 10-to-1 multiplexer for signal <rot_s6> created at line 501.
+    Found 9-bit 10-to-1 multiplexer for signal <reg_intersected_r6[3]_X_8_o_wide_mux_210_OUT> created at line 503.
+    Found 10-bit 10-to-1 multiplexer for signal <reg_intersected_r6[3]_X_8_o_wide_mux_212_OUT> created at line 504.
+    Found 8-bit 4-to-1 multiplexer for signal <img_color_idx_s9> created at line 574.
+    Found 16-bit 10-to-1 multiplexer for signal <n1239> created at line 581.
+    Found 8-bit 4-to-1 multiplexer for signal <spr_color_idx_s12> created at line 627.
+    Found 1-bit 10-to-1 multiplexer for signal <reg_intersected_r13[3]_X_8_o_Mux_279_o> created at line 651.
+    Found 13-bit 4-to-1 multiplexer for signal <mem_addr_s> created at line 697.
     Found 4-bit 4-to-1 multiplexer for signal <_n1453> created at line 225.
     Found 4-bit 4-to-1 multiplexer for signal <_n1456> created at line 226.
     Found 4-bit 4-to-1 multiplexer for signal <_n1442> created at line 186.
     Found 4-bit 4-to-1 multiplexer for signal <_n1450> created at line 187.
     Found 13-bit comparator lessequal for signal <n0003> created at line 311
     Found 13-bit comparator greater for signal <GND_8_o_reg_word_addr[12]_LessThan_5_o> created at line 311
-    Found 9-bit comparator lessequal for signal <n0689> created at line 346
-    Found 9-bit comparator lessequal for signal <n0691> created at line 347
-    Found 10-bit comparator lessequal for signal <n0693> created at line 348
-    Found 10-bit comparator lessequal for signal <n0695> created at line 349
-    Found 9-bit comparator lessequal for signal <n0709> created at line 346
-    Found 9-bit comparator lessequal for signal <n0711> created at line 347
-    Found 10-bit comparator lessequal for signal <n0713> created at line 348
-    Found 10-bit comparator lessequal for signal <n0715> created at line 349
-    Found 9-bit comparator lessequal for signal <n0729> created at line 346
-    Found 9-bit comparator lessequal for signal <n0731> created at line 347
-    Found 10-bit comparator lessequal for signal <n0733> created at line 348
-    Found 10-bit comparator lessequal for signal <n0735> created at line 349
-    Found 9-bit comparator lessequal for signal <n0749> created at line 346
-    Found 9-bit comparator lessequal for signal <n0751> created at line 347
-    Found 10-bit comparator lessequal for signal <n0753> created at line 348
-    Found 10-bit comparator lessequal for signal <n0755> created at line 349
-    Found 9-bit comparator lessequal for signal <n0769> created at line 346
-    Found 9-bit comparator lessequal for signal <n0771> created at line 347
-    Found 10-bit comparator lessequal for signal <n0773> created at line 348
-    Found 10-bit comparator lessequal for signal <n0775> created at line 349
-    Found 9-bit comparator lessequal for signal <n0789> created at line 346
-    Found 9-bit comparator lessequal for signal <n0791> created at line 347
-    Found 10-bit comparator lessequal for signal <n0793> created at line 348
-    Found 10-bit comparator lessequal for signal <n0795> created at line 349
-    Found 9-bit comparator lessequal for signal <n0809> created at line 346
-    Found 9-bit comparator lessequal for signal <n0811> created at line 347
-    Found 10-bit comparator lessequal for signal <n0813> created at line 348
-    Found 10-bit comparator lessequal for signal <n0815> created at line 349
-    Found 9-bit comparator lessequal for signal <n0829> created at line 346
-    Found 9-bit comparator lessequal for signal <n0831> created at line 347
-    Found 10-bit comparator lessequal for signal <n0833> created at line 348
-    Found 10-bit comparator lessequal for signal <n0835> created at line 349
-    Found 9-bit comparator lessequal for signal <n0849> created at line 346
-    Found 9-bit comparator lessequal for signal <n0851> created at line 347
-    Found 10-bit comparator lessequal for signal <n0853> created at line 348
-    Found 10-bit comparator lessequal for signal <n0855> created at line 349
-    Found 9-bit comparator lessequal for signal <n0869> created at line 346
-    Found 9-bit comparator lessequal for signal <n0871> created at line 347
-    Found 10-bit comparator lessequal for signal <n0873> created at line 348
-    Found 10-bit comparator lessequal for signal <n0875> created at line 349
-    Found 8-bit comparator greater for signal <n1006> created at line 653
-    Found 8-bit comparator greater for signal <GND_8_o_spr_color_idx_r13[7]_LessThan_282_o> created at line 653
+    Found 9-bit comparator lessequal for signal <n0690> created at line 350
+    Found 9-bit comparator lessequal for signal <n0692> created at line 351
+    Found 10-bit comparator lessequal for signal <n0694> created at line 352
+    Found 10-bit comparator lessequal for signal <n0696> created at line 353
+    Found 9-bit comparator lessequal for signal <n0710> created at line 350
+    Found 9-bit comparator lessequal for signal <n0712> created at line 351
+    Found 10-bit comparator lessequal for signal <n0714> created at line 352
+    Found 10-bit comparator lessequal for signal <n0716> created at line 353
+    Found 9-bit comparator lessequal for signal <n0730> created at line 350
+    Found 9-bit comparator lessequal for signal <n0732> created at line 351
+    Found 10-bit comparator lessequal for signal <n0734> created at line 352
+    Found 10-bit comparator lessequal for signal <n0736> created at line 353
+    Found 9-bit comparator lessequal for signal <n0750> created at line 350
+    Found 9-bit comparator lessequal for signal <n0752> created at line 351
+    Found 10-bit comparator lessequal for signal <n0754> created at line 352
+    Found 10-bit comparator lessequal for signal <n0756> created at line 353
+    Found 9-bit comparator lessequal for signal <n0770> created at line 350
+    Found 9-bit comparator lessequal for signal <n0772> created at line 351
+    Found 10-bit comparator lessequal for signal <n0774> created at line 352
+    Found 10-bit comparator lessequal for signal <n0776> created at line 353
+    Found 9-bit comparator lessequal for signal <n0790> created at line 350
+    Found 9-bit comparator lessequal for signal <n0792> created at line 351
+    Found 10-bit comparator lessequal for signal <n0794> created at line 352
+    Found 10-bit comparator lessequal for signal <n0796> created at line 353
+    Found 9-bit comparator lessequal for signal <n0810> created at line 350
+    Found 9-bit comparator lessequal for signal <n0812> created at line 351
+    Found 10-bit comparator lessequal for signal <n0814> created at line 352
+    Found 10-bit comparator lessequal for signal <n0816> created at line 353
+    Found 9-bit comparator lessequal for signal <n0830> created at line 350
+    Found 9-bit comparator lessequal for signal <n0832> created at line 351
+    Found 10-bit comparator lessequal for signal <n0834> created at line 352
+    Found 10-bit comparator lessequal for signal <n0836> created at line 353
+    Found 9-bit comparator lessequal for signal <n0850> created at line 350
+    Found 9-bit comparator lessequal for signal <n0852> created at line 351
+    Found 10-bit comparator lessequal for signal <n0854> created at line 352
+    Found 10-bit comparator lessequal for signal <n0856> created at line 353
+    Found 9-bit comparator lessequal for signal <n0870> created at line 350
+    Found 9-bit comparator lessequal for signal <n0872> created at line 351
+    Found 10-bit comparator lessequal for signal <n0874> created at line 352
+    Found 10-bit comparator lessequal for signal <n0876> created at line 353
+    Found 8-bit comparator greater for signal <n1006> created at line 654
+    Found 8-bit comparator greater for signal <GND_8_o_spr_color_idx_r13[7]_LessThan_282_o> created at line 654
     WARNING:Xst:2404 -  FFs/Latches <palette_addr_r15<12:8>> (without init value) have a constant value of 0 in block <battle_city>.
     WARNING:Xst:2404 -  FFs/Latches <palette_addr_r16<12:8>> (without init value) have a constant value of 0 in block <battle_city>.
     Summary:
@@ -929,9 +929,9 @@ Delay:               7.226ns (Levels of Logic = 15)
      MUXCY:CI->O           1   0.023   0.000  battle_city_periph_0/battle_city_i/Madd_reg_end_row_s<1>_cy<5> (battle_city_periph_0/battle_city_i/Madd_reg_end_row_s<1>_cy<5>)
      MUXCY:CI->O           1   0.023   0.000  battle_city_periph_0/battle_city_i/Madd_reg_end_row_s<1>_cy<6> (battle_city_periph_0/battle_city_i/Madd_reg_end_row_s<1>_cy<6>)
      XORCY:CI->O           2   0.206   1.002  battle_city_periph_0/battle_city_i/Madd_reg_end_row_s<1>_xor<7> (battle_city_periph_0/battle_city_i/reg_end_row_s<1><7>)
-     LUT4:I0->O            0   0.254   0.000  battle_city_periph_0/battle_city_i/Mcompar_pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_58_o_lutdi3 (battle_city_periph_0/battle_city_i/Mcompar_pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_58_o_lutdi3)
-     MUXCY:DI->O           1   0.181   0.000  battle_city_periph_0/battle_city_i/Mcompar_pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_58_o_cy<3> (battle_city_periph_0/battle_city_i/Mcompar_pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_58_o_cy<3>)
-     MUXCY:CI->O           1   0.235   0.790  battle_city_periph_0/battle_city_i/Mcompar_pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_58_o_cy<4> (battle_city_periph_0/battle_city_i/pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_58_o)
+     LUT4:I0->O            0   0.254   0.000  battle_city_periph_0/battle_city_i/Mcompar_pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_59_o_lutdi3 (battle_city_periph_0/battle_city_i/Mcompar_pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_59_o_lutdi3)
+     MUXCY:DI->O           1   0.181   0.000  battle_city_periph_0/battle_city_i/Mcompar_pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_59_o_cy<3> (battle_city_periph_0/battle_city_i/Mcompar_pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_59_o_cy<3>)
+     MUXCY:CI->O           1   0.235   0.790  battle_city_periph_0/battle_city_i/Mcompar_pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_59_o_cy<4> (battle_city_periph_0/battle_city_i/pixel_row_i[8]_reg_end_row_s[1][8]_LessThan_59_o)
      LUT5:I3->O            2   0.250   1.002  battle_city_periph_0/battle_city_i/reg_intsect_s0<1>1 (battle_city_periph_0/battle_city_i/reg_intsect_s0<1>)
      LUT4:I0->O            1   0.254   0.682  battle_city_periph_0/battle_city_i/reg_intersected_r1_0_rstpot_SW0 (N42)
      LUT6:I5->O            1   0.254   0.000  battle_city_periph_0/battle_city_i/reg_intersected_r1_0_rstpot (battle_city_periph_0/battle_city_i/reg_intersected_r1_0_rstpot)
@@ -1013,8 +1013,8 @@ S_AXI_ACLK     |    7.226|         |         |         |
 =========================================================================
 
 
-Total REAL time to Xst completion: 16.00 secs
-Total CPU time to Xst completion: 15.71 secs
+Total REAL time to Xst completion: 11.00 secs
+Total CPU time to Xst completion: 10.69 secs
  
 --> 
 
