@@ -107,12 +107,10 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1525703918" xil_pn:in_ck="3505242367039131751" xil_pn:name="TRANEXT_xstsynthesize_spartan6" xil_pn:prop_ck="5349504966102051856" xil_pn:start_ts="1525703897">
+    <transform xil_pn:end_ts="1525707171" xil_pn:in_ck="3505242367039131751" xil_pn:name="TRANEXT_xstsynthesize_spartan6" xil_pn:prop_ck="5349504966102051856" xil_pn:start_ts="1525707156">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
-      <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="InputChanged"/>
       <outfile xil_pn:name="_xmsgs/xst.xmsgs"/>
       <outfile xil_pn:name="battle_city_standalone.lso"/>
       <outfile xil_pn:name="battle_city_standalone.ngc"/>
@@ -134,7 +132,6 @@
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
       <status xil_pn:value="OutOfDateForInputs"/>
-      <status xil_pn:value="OutOfDateForPredecessor"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="InputAdded"/>
       <status xil_pn:value="InputChanged"/>

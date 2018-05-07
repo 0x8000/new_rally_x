@@ -27,6 +27,9 @@
 #define MAP_H							56
 
 #define REGS_BASE_ADDRESS               4096
+#define OFFSET_ROW_REG_OFFSET (4096+2048+0)
+#define OFFSET_COL_REG_OFFSET (4096+2048+1)
+#define STAT_IMG_SIZE_IS_16_REG_OFFSET (4096+2048+2)
 
 
 #define BTN_DOWN( b )                   ( !( b & 0x01 ) )
@@ -225,7 +228,8 @@ static void map_update(characters * mario) {
 		for (x = 0; x < MAP_WIDTH; x++) {
 			addr = XPAR_BATTLE_CITY_PERIPH_0_BASEADDR
 					+ 4 * (MAP_BASE_ADDRESS + y * MAP_WIDTH + x);
-			switch (map1[(roundY-15)+y][(roundX-20)+x]) {
+			//switch (map1[(roundY-15)+y][(roundX-20)+x]) {
+			switch (map1[y][x]) {
 			case 0:
 				Xil_Out32(addr, IMG_16x16_crno);
 				break;

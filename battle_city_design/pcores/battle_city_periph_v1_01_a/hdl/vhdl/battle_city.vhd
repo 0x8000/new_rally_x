@@ -32,6 +32,9 @@ end entity battle_city;
 architecture Behavioral of battle_city is
     constant MAP_OFFSET : natural := 639; -- Pointer to start of map in memory
     constant REGISTER_OFFSET : natural := 4096; -- 1 << (ADDR_WIDTH-1) - upper part of addr space. 
+    constant OFFSET_ROW_REG_OFFSET : natural := 4096+2048+0;
+	 constant OFFSET_COL_REG_OFFSET : natural := 4096+2048+1;
+	 constant STAT_IMG_SIZE_IS_16_REG_OFFSET : natural := 4096+2048+2;
 
    component ram 	
    port
@@ -143,11 +146,11 @@ architecture Behavioral of battle_city is
    
     ------------ GLOBAL ------------------------------------------
 	
-	signal stat_img_size_is_16_r  : std_logic;
+	signal stat_img_size_is_16_r  : std_logic := '1'; -- 16x16
 	signal stat_img_size_m_1_s        : unsigned(3 downto 0);
 	
-	signal offset_row_r : unsigned(3 downto 0);
-	signal offset_col_r : unsigned(3 downto 0);
+	signal offset_row_r : unsigned(3 downto 0) := x"0";
+	signal offset_col_r : unsigned(3 downto 0) := x"0";
 	signal offseted_pixel_row_s : unsigned(8 downto 0);
 	signal offseted_pixel_col_s : unsigned(9 downto 0);
 	signal map_row_size_8_s  : std_logic_vector(8 downto 3);
@@ -317,26 +320,30 @@ architecture Behavioral of battle_city is
    --                            GLOBAL                                             --
    -----------------------------------------------------------------------------------
 
-	local_addr_s <= signed(bus_addr_i) - C_BASEADDR;     
+	local_addr_s <= signed(bus_addr_i) - C_BASEADDR;
+	
 	reg_word_addr <= signed(local_addr_s) - REGISTER_OFFSET;
 	reg_idx <= reg_word_addr(ADDR_WIDTH-1 downto 1);
-	   process(clk_i) begin
-		  if rising_edge(clk_i) then
-			 if bus_we_i = '1' and 0 <= reg_word_addr and reg_word_addr < REGISTER_NUMBER*2 then
-				if reg_word_addr(0) = '1' then
+	process(clk_i) begin
+		if rising_edge(clk_i) then
+			if bus_we_i = '1' then
+				if 0 <= reg_word_addr and reg_word_addr < REGISTER_NUMBER*2 then
+					if reg_word_addr(0) = '1' then
 						registers_s(to_integer(reg_idx))(63 downto 32) <= unsigned(bus_data_i);
 					else
 						registers_s(to_integer(reg_idx))(31 downto 0) <= unsigned(bus_data_i);
 					end if;
-					
-			 end if;
-		  end if;
-	   end process;
+				elsif reg_word_addr = OFFSET_ROW_REG_OFFSET then
+					offset_row_r <= unsigned(bus_data_i(offset_row_r'range));
+				elsif reg_word_addr = OFFSET_COL_REG_OFFSET then
+					offset_col_r <= unsigned(bus_data_i(offset_col_r'range));
+				elsif reg_word_addr = STAT_IMG_SIZE_IS_16_REG_OFFSET then
+					stat_img_size_is_16_r <= bus_data_i(0);
+				end if;
+			end if;
+		end if;
+	end process;
 
-	-- TODO Registars.
-	stat_img_size_is_16_r <= '1';--uvek 16x16
-	offset_row_r <= x"8";
-	offset_col_r <= x"8";
 
 	--if 7 when 8 then 15 when 16? bravo una
 	stat_img_size_m_1_s <= "1111" when stat_img_size_is_16_r = '1' else "0111";
