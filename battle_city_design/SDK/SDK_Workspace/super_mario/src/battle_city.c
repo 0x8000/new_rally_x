@@ -92,7 +92,7 @@ characters mario = {
 		16,	                          // x
 		16, 		                     // y
 		DIR_RIGHT,              		// dir
-		IMG_16x16_enemi1,  			// type
+		IMG_16x16_mario,  			// type
 
 		b_false,                		// destroyed
 
