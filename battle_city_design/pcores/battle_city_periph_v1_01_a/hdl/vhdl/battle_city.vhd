@@ -335,8 +335,8 @@ architecture Behavioral of battle_city is
 
 	-- TODO Registars.
 	stat_img_size_is_16_r <= '1';--uvek 16x16
-	offset_row_r <= x"8";
-	offset_col_r <= x"8";
+	offset_row_r <= x"0";
+	offset_col_r <= x"0";
 	
 	
 	--if 7 when 8 then 15 when 16? bravo una
