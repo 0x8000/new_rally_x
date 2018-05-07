@@ -145,6 +145,17 @@ architecture Behavioral of battle_city is
 	
 	signal stat_img_size_is_16_r  : std_logic;
 	signal stat_img_size_m_1_s        : unsigned(3 downto 0);
+	signal offseted_pixel_row_s : unsigned(8 downto 0);
+	signal offseted_pixel_col_s : unsigned(9 downto 0);
+	signal map_row_size_8_s  : std_logic_vector(8 downto 3);
+	signal map_col_size_8_s  : unsigned(9 downto 3);
+   signal map_row_size_16_s : std_logic_vector(8 downto 4);
+   signal map_col_size_16_s : unsigned(9 downto 4);
+	signal img_row_size_8_s  : unsigned(2 downto 0);
+	signal img_col_size_8_s  : unsigned(2 downto 0);
+	signal img_row_size_16_s : unsigned(3 downto 0);
+	signal img_col_size_16_s : unsigned(3 downto 0);
+	
 
 	--- STAGE 0 ---
 	signal map_index_size_8_s0	 : unsigned(12 downto 0);
@@ -325,6 +336,18 @@ architecture Behavioral of battle_city is
 	--if 7 when 8 then 15 when 16? bravo una
 	stat_img_size_m_1_s <= "1111" when stat_img_size_is_16_r = '1' else "0111";
 
+	offseted_pixel_row_s <= pixel_row_i;
+	offseted_pixel_col_s <= pixel_col_i;
+	map_row_size_8_s <= std_logic_vector(offseted_pixel_row_s(8 downto 3));
+	map_col_size_8_s <= offseted_pixel_col_s(9 downto 3);
+   map_row_size_16_s <= std_logic_vector(offseted_pixel_row_s(8 downto 4));
+   map_col_size_16_s <= offseted_pixel_col_s(9 downto 4);
+	img_row_size_8_s  <= offseted_pixel_row_s(2 downto 0);
+	img_col_size_8_s  <= offseted_pixel_col_s(2 downto 0);
+	img_row_size_16_s <= offseted_pixel_row_s(3 downto 0);
+	img_col_size_16_s <= offseted_pixel_col_s(3 downto 0);
+	
+
 
 	rgb_o <= mem_data_s(23 downto 0);
 	
@@ -376,13 +399,13 @@ architecture Behavioral of battle_city is
 	
 	
    -- map_index_s = (row/8)*80 + col/8;
-	map_index_size_8_s0  <= unsigned('0' & std_logic_vector(pixel_row_i(8 downto 3)) & "000000") 
-                   + unsigned('0' & std_logic_vector(pixel_row_i(8 downto 3)) & "0000")
-                   + pixel_col_i(9 downto 3);
+	map_index_size_8_s0  <= unsigned('0' & map_row_size_8_s & "000000") 
+                   + unsigned('0' & map_row_size_8_s & "0000")
+                   + map_col_size_8_s;
 						 
-	map_index_size_16_s0  <= unsigned ("000" & std_logic_vector(pixel_row_i(8 downto 4)) & "00000") 
-                   + unsigned("000" & std_logic_vector(pixel_row_i(8 downto 4)) & "000")
-                   + pixel_col_i(9 downto 4);
+	map_index_size_16_s0  <= unsigned ("000" & map_row_size_16_s & "00000") 
+                   + unsigned("000" & map_row_size_16_s & "000")
+                   + map_col_size_16_s;
 						 
 	map_index_s0 <= map_index_size_16_s0 when stat_img_size_is_16_r = '1' else map_index_size_8_s0;
 
@@ -425,8 +448,8 @@ architecture Behavioral of battle_city is
 	img_rot_s3    <= unsigned(mem_data_s(23 downto 16));
 	img_addr_s3   <= unsigned(mem_data_s(ADDR_WIDTH-1 downto 0));
 	
-	img_row_s3 <= pixel_row_i(3 downto 0) when stat_img_size_is_16_r = '1' else '0' & pixel_row_i(2 downto 0);
-	img_col_s3 <= pixel_col_i(3 downto 0) when stat_img_size_is_16_r = '1' else '0' & pixel_col_i(2 downto 0);	
+	img_row_s3 <= img_row_size_16_s when stat_img_size_is_16_r = '1' else '0' & img_row_size_8_s;
+	img_col_s3 <= img_col_size_16_s when stat_img_size_is_16_r = '1' else '0' & img_col_size_8_s;	
 	
 	process(clk_i) begin
 		if rising_edge(clk_i) then

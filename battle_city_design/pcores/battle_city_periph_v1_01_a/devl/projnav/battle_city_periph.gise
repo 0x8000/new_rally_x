@@ -107,7 +107,7 @@
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="ReadyToRun"/>
     </transform>
-    <transform xil_pn:end_ts="1525699774" xil_pn:in_ck="3505242367039131751" xil_pn:name="TRANEXT_xstsynthesize_spartan6" xil_pn:prop_ck="5349504966102051856" xil_pn:start_ts="1525699748">
+    <transform xil_pn:end_ts="1525702119" xil_pn:in_ck="3505242367039131751" xil_pn:name="TRANEXT_xstsynthesize_spartan6" xil_pn:prop_ck="5349504966102051856" xil_pn:start_ts="1525702098">
       <status xil_pn:value="SuccessfullyRun"/>
       <status xil_pn:value="WarningsGenerated"/>
       <status xil_pn:value="ReadyToRun"/>
@@ -134,6 +134,7 @@
       <status xil_pn:value="OutOfDateForInputs"/>
       <status xil_pn:value="OutOfDateForOutputs"/>
       <status xil_pn:value="InputAdded"/>
+      <status xil_pn:value="InputChanged"/>
       <status xil_pn:value="InputRemoved"/>
       <status xil_pn:value="OutputRemoved"/>
     </transform>

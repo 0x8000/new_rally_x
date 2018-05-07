@@ -553,7 +553,7 @@ void battle_city() {
 	//chhar_spawn(&enemie2);
 	//chhar_spawn(&enemie3);
 	//chhar_spawn(&enemie4);
-#if 1
+#if 0
 	chhar_spawn(&mario);
 #else
 
