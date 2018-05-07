@@ -4,7 +4,7 @@ Copyright (c) 1995-2013 Xilinx, Inc.  All rights reserved.
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.06 secs
+Total CPU time to Xst completion: 0.07 secs
  
 --> 
 TABLE OF CONTENTS
@@ -997,12 +997,6 @@ Mapping all equations...
 Building and optimizing final netlist ...
 Found area constraint ratio of 100 (+ 0) on block battle_city, actual ratio is 9.
 INFO:Xst:2260 - The FF/Latch <io_periph/AXI_LITE_IPIF_I/I_SLAVE_ATTACHMENT/I_DECODER/cs_out_i_0> in Unit <io_periph> is equivalent to the following FF/Latch : <io_periph/AXI_LITE_IPIF_I/I_SLAVE_ATTACHMENT/I_DECODER/cs_out_i_0_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_y_4> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_y_4_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_y_5> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_y_5_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_x_5> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_x_5_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_x_4> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_x_4_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_x_1> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_x_1_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_x_0> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_x_0_1> 
 INFO:Xst:2260 - The FF/Latch <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_0> in Unit <axi4lite_0> is equivalent to the following 3 FFs/Latches : <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_0_1> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_0_2> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_0_3> 
 INFO:Xst:2260 - The FF/Latch <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_1> in Unit <axi4lite_0> is equivalent to the following 4 FFs/Latches : <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_1_1> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_1_2> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_1_3> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_1_4> 
 INFO:Xst:2260 - The FF/Latch <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.addr_arbiter_inst/grant_rnw> in Unit <axi4lite_0> is equivalent to the following 4 FFs/Latches : <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.addr_arbiter_inst/grant_rnw_1> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.addr_arbiter_inst/grant_rnw_2> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.addr_arbiter_inst/grant_rnw_3> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.addr_arbiter_inst/grant_rnw_4> 
@@ -1013,12 +1007,6 @@ INFO:Xst:2260 - The FF/Latch <microblaze_0/MicroBlaze_Core_I/Performance.Decode_
 INFO:Xst:2260 - The FF/Latch <microblaze_0/MicroBlaze_Core_I/Performance.Decode_I/wb_exception_kind_i_29> in Unit <microblaze_0> is equivalent to the following FF/Latch : <microblaze_0/MicroBlaze_Core_I/Performance.Decode_I/wb_exception_kind_i_29_1> 
 INFO:Xst:2260 - The FF/Latch <microblaze_0/MicroBlaze_Core_I/Performance.Decode_I/wb_exception_kind_i_28> in Unit <microblaze_0> is equivalent to the following FF/Latch : <microblaze_0/MicroBlaze_Core_I/Performance.Decode_I/wb_exception_kind_i_28_1> 
 INFO:Xst:2260 - The FF/Latch <io_periph/AXI_LITE_IPIF_I/I_SLAVE_ATTACHMENT/I_DECODER/cs_out_i_0> in Unit <io_periph> is equivalent to the following FF/Latch : <io_periph/AXI_LITE_IPIF_I/I_SLAVE_ATTACHMENT/I_DECODER/cs_out_i_0_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_y_4> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_y_4_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_y_5> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_y_5_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_x_5> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_x_5_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_x_4> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_x_4_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_x_1> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_x_1_1> 
-INFO:Xst:2260 - The FF/Latch <battle_city_periph_0/vga_ctrl_i/pixel_x_0> in Unit <battle_city_periph_0> is equivalent to the following FF/Latch : <battle_city_periph_0/vga_ctrl_i/pixel_x_0_1> 
 INFO:Xst:2260 - The FF/Latch <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_0> in Unit <axi4lite_0> is equivalent to the following 3 FFs/Latches : <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_0_1> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_0_2> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_0_3> 
 INFO:Xst:2260 - The FF/Latch <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_1> in Unit <axi4lite_0> is equivalent to the following 4 FFs/Latches : <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_1_1> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_1_2> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_1_3> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/m_atarget_enc_1_4> 
 INFO:Xst:2260 - The FF/Latch <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.addr_arbiter_inst/grant_rnw> in Unit <axi4lite_0> is equivalent to the following 4 FFs/Latches : <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.addr_arbiter_inst/grant_rnw_1> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.addr_arbiter_inst/grant_rnw_2> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.addr_arbiter_inst/grant_rnw_3> <axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.addr_arbiter_inst/grant_rnw_4> 
@@ -1056,24 +1044,24 @@ Top Level Output File Name         : battle_city.ngc
 
 Primitive and Black Box Usage:
 ------------------------------
-# BELS                             : 4376
+# BELS                             : 4377
 #      GND                         : 13
-#      INV                         : 39
+#      INV                         : 40
 #      LUT1                        : 176
-#      LUT2                        : 284
-#      LUT3                        : 392
-#      LUT4                        : 1092
+#      LUT2                        : 272
+#      LUT3                        : 380
+#      LUT4                        : 1105
 #      LUT5                        : 365
-#      LUT6                        : 774
+#      LUT6                        : 804
 #      LUT6_2                      : 96
 #      MULT_AND                    : 2
-#      MUXCY                       : 453
+#      MUXCY                       : 443
 #      MUXCY_L                     : 155
-#      MUXF7                       : 158
+#      MUXF7                       : 160
 #      VCC                         : 8
-#      XORCY                       : 369
-# FlipFlops/Latches                : 2649
-#      FD                          : 340
+#      XORCY                       : 358
+# FlipFlops/Latches                : 2648
+#      FD                          : 355
 #      FDC                         : 34
 #      FDC_1                       : 5
 #      FDCE                        : 15
@@ -1081,7 +1069,7 @@ Primitive and Black Box Usage:
 #      FDE_1                       : 8
 #      FDP                         : 5
 #      FDR                         : 643
-#      FDRE                        : 647
+#      FDRE                        : 631
 #      FDRE_1                      : 1
 #      FDS                         : 4
 #      FDSE                        : 42
@@ -1112,19 +1100,19 @@ Selected Device : 6slx45fgg676-2
 
 
 Slice Logic Utilization: 
- Number of Slice Registers:            2649  out of  54576     4%  
- Number of Slice LUTs:                 3454  out of  27288    12%  
-    Number used as Logic:              3218  out of  27288    11%  
+ Number of Slice Registers:            2648  out of  54576     4%  
+ Number of Slice LUTs:                 3474  out of  27288    12%  
+    Number used as Logic:              3238  out of  27288    11%  
     Number used as Memory:              236  out of   6408     3%  
        Number used as RAM:               64
        Number used as SRL:              172
 
 Slice Logic Distribution: 
- Number of LUT Flip Flop pairs used:   4972
-   Number with an unused Flip Flop:    2323  out of   4972    46%  
-   Number with an unused LUT:          1518  out of   4972    30%  
-   Number of fully used LUT-FF pairs:  1131  out of   4972    22%  
-   Number of unique control sets:       116
+ Number of LUT Flip Flop pairs used:   4993
+   Number with an unused Flip Flop:    2345  out of   4993    46%  
+   Number with an unused LUT:          1519  out of   4993    30%  
+   Number of fully used LUT-FF pairs:  1129  out of   4993    22%  
+   Number of unique control sets:       115
 
 IO Utilization: 
  Number of IOs:                          41
@@ -1158,7 +1146,7 @@ Clock Information:
 -----------------------------------+-------------------------------------------------------------------------------------------------------------------+-------+
 Clock Signal                       | Clock buffer(FF name)                                                                                             | Load  |
 -----------------------------------+-------------------------------------------------------------------------------------------------------------------+-------+
-CLK_P                              | PLL_ADV:CLKOUT0                                                                                                   | 2636  |
+CLK_P                              | PLL_ADV:CLKOUT0                                                                                                   | 2635  |
 debug_module/debug_module/drck_i   | BUFG                                                                                                              | 209   |
 debug_module/Ext_JTAG_UPDATE       | NONE(microblaze_0/microblaze_0/MicroBlaze_Core_I/Performance.Use_Debug_Logic.Master_Core.Debug_Perf/command_reg_0)| 43    |
 -----------------------------------+-------------------------------------------------------------------------------------------------------------------+-------+
@@ -1184,7 +1172,7 @@ All values displayed in nanoseconds (ns)
 =========================================================================
 Timing constraint: Default period analysis for Clock 'CLK_P'
   Clock period: 22.846ns (frequency: 43.771MHz)
-  Total number of paths / destination ports: 587659 / 7657
+  Total number of paths / destination ports: 586663 / 7624
 -------------------------------------------------------------------------
 Delay:               11.423ns (Levels of Logic = 11)
   Source:            axi4lite_0/axi4lite_0/crossbar_samd/gen_sasd.crossbar_sasd_0/gen_crossbar.splitter_ar/m_ready_d_1 (FF)
@@ -1475,14 +1463,14 @@ debug_module/debug_module/drck_i|    2.860|    4.093|    3.740|         |
 =========================================================================
 
 
-Total REAL time to Xst completion: 13.00 secs
-Total CPU time to Xst completion: 12.79 secs
+Total REAL time to Xst completion: 23.00 secs
+Total CPU time to Xst completion: 22.34 secs
  
 --> 
 
-Total memory usage is 313236 kilobytes
+Total memory usage is 312660 kilobytes
 
 Number of errors   :    0 (   0 filtered)
 Number of warnings :    6 (   0 filtered)
-Number of infos    :  878 (   0 filtered)
+Number of infos    :  866 (   0 filtered)
 

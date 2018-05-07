@@ -141,28 +141,14 @@ architecture Behavioral of battle_city is
    -- Testing signals --
    signal test_s           : unsigned(11 downto 0);
    
-    ------------ GLOBAL ------------------------------------------
+    ------------ mi radimo ------------------------------------------
 	
-	signal stat_img_size_is_16_r  : std_logic;
-	signal stat_img_m_1_size_s        : unsigned(3 downto 0);
-	
-	signal offset_row_r : unsigned(3 downto 0);
-	signal offset_col_r : unsigned(3 downto 0);
-	signal offseted_pixel_row_s : unsigned(8 downto 0);
-	signal offseted_pixel_col_s : unsigned(9 downto 0);
-	signal map_row_size_8_s  : std_logic_vector(8 downto 3);
-	signal map_col_size_8_s  : unsigned(9 downto 3);
-   signal map_row_size_16_s : std_logic_vector(8 downto 4);
-   signal map_col_size_16_s : unsigned(9 downto 4);
-	signal img_row_size_8_s  : unsigned(2 downto 0);
-	signal img_col_size_8_s  : unsigned(2 downto 0);
-	signal img_row_size_16_s : unsigned(3 downto 0);
-	signal img_col_size_16_s : unsigned(3 downto 0);
-	
-	
-	--- STAGE 0 ---
+	signal stat_img_size        : unsigned(3 downto 0);
 	signal map_index_size_8_s0	 : unsigned(12 downto 0);
 	signal map_index_size_16_s0 : unsigned(12 downto 0);
+	signal stat_img_size_is_16  : std_logic;
+	
+	--- STAGE 0 ---
    signal reg_intersected_s0        : unsigned(NUM_BITS_FOR_REG_NUM-1 downto 0);    -- Index of intersected sprite
 	signal map_index_s0     	      :  unsigned(12 downto 0);
 	signal map_addr_s0       	      :  unsigned(ADDR_WIDTH-1 downto 0);
@@ -333,28 +319,9 @@ architecture Behavioral of battle_city is
 		  end if;
 	   end process;
 
-	-- TODO Registars.
-	stat_img_size_is_16_r <= '1';--uvek 16x16
-	offset_row_r <= x"0";
-	offset_col_r <= x"0";
-	
-	
-	--if 7 when 8 then 15 when 16? bravo una
-	stat_img_m_1_size_s <= "1111" when stat_img_size_is_16_r = '1' else "0111";
-	
-	offseted_pixel_row_s <= pixel_row_i + offset_row_r;
-	offseted_pixel_col_s <= pixel_col_i + offset_col_r;
-	map_row_size_8_s <= std_logic_vector(offseted_pixel_row_s(8 downto 3));
-	map_col_size_8_s <= offseted_pixel_col_s(9 downto 3);
-   map_row_size_16_s <= std_logic_vector(offseted_pixel_row_s(8 downto 4));
-   map_col_size_16_s <= offseted_pixel_col_s(9 downto 4);
-	img_row_size_8_s  <= offseted_pixel_row_s(2 downto 0);
-	img_col_size_8_s  <= offseted_pixel_col_s(2 downto 0);
-	img_row_size_16_s <= offseted_pixel_row_s(3 downto 0);
-	img_col_size_16_s <= offseted_pixel_col_s(3 downto 0);
-	
-	
-	
+	--uvek 16x16
+	stat_img_size_is_16 <= '1';
+
 	rgb_o <= mem_data_s(23 downto 0);
 	
 	------------------------------------
@@ -402,21 +369,18 @@ architecture Behavioral of battle_city is
 
 	
 	
-   -- map_index_s = (row/8)*81 + col/8;
-	map_index_size_8_s0  <= 
-				unsigned('0' & map_row_size_8_s & "000000") + -- *64
-            unsigned('0' & map_row_size_8_s & "0000") + -- *16
-				unsigned('0' & map_row_size_8_s) + -- *1
-                map_col_size_8_s;
+	
+	
+   -- map_index_s = (row/8)*80 + col/8;
+	map_index_size_8_s0  <= unsigned('0' & std_logic_vector(pixel_row_i(8 downto 3)) & "000000") 
+                   + unsigned('0' & std_logic_vector(pixel_row_i(8 downto 3)) & "0000")
+                   + pixel_col_i(9 downto 3);
 						 
-	-- map_index_s = (row/16)*41 + col/16;
-	map_index_size_16_s0  <= 
-				unsigned("000" & map_row_size_16_s & "00000") + -- *32
-            unsigned("000" & map_row_size_16_s & "000") + -- *8
-				unsigned("000" & map_row_size_16_s) + -- *1
-                map_col_size_16_s;
+	map_index_size_16_s0  <= unsigned ("000" & std_logic_vector(pixel_row_i(8 downto 4)) & "00000") 
+                   + unsigned("000" & std_logic_vector(pixel_row_i(8 downto 4)) & "000")
+                   + pixel_col_i(9 downto 4);
 						 
-	map_index_s0 <= map_index_size_16_s0 when stat_img_size_is_16_r = '1' else map_index_size_8_s0;
+	map_index_s0 <= map_index_size_16_s0 when stat_img_size_is_16 = '1' else map_index_size_8_s0;
 
 	
 	map_addr_s0 <= map_index_s0 + MAP_OFFSET;
@@ -457,8 +421,8 @@ architecture Behavioral of battle_city is
 	img_rot_s3    <= unsigned(mem_data_s(23 downto 16));
 	img_addr_s3   <= unsigned(mem_data_s(ADDR_WIDTH-1 downto 0));
 	
-	img_row_s3 <= img_row_size_16_s when stat_img_size_is_16_r = '1' else '0' & img_row_size_8_s;
-	img_col_s3 <= img_col_size_16_s when stat_img_size_is_16_r = '1' else '0' & img_col_size_8_s;	
+	img_row_s3 <= pixel_row_i(3 downto 0) when stat_img_size_is_16 = '1' else '0' & pixel_row_i(2 downto 0);
+	img_col_s3 <= pixel_col_i(3 downto 0) when stat_img_size_is_16 = '1' else '0' & pixel_col_i(2 downto 0);	
 	
 	process(clk_i) begin
 		if rising_edge(clk_i) then
@@ -476,19 +440,23 @@ architecture Behavioral of battle_city is
 	--- STAGE 4,  img_tex_col_s, img_tex_row_s      ---
 	--------------------------------------------------
 	
+	--if 7 when 8 then 15 when 16? bravo una
+	
+	stat_img_size <= "1111" when stat_img_size_is_16 = '1' else "0111";
+	
 	with img_rot_r4 select
 		img_tex_col_s4 <= 
 		   img_col_r4       when "00000000",   -- 0  --skinuli nulu spreda
-		   stat_img_m_1_size_s - img_row_r4   when "00000001",   -- 90    --size_8_c
-			stat_img_m_1_size_s - img_col_r4  when "00000010",   -- 180
+		   stat_img_size - img_row_r4   when "00000001",   -- 90    --size_8_c
+			stat_img_size - img_col_r4  when "00000010",   -- 180
 			img_row_r4		  when others; 		 -- 270   --skinuli nulu spreda
 	
 	with img_rot_r4 select
 		img_tex_row_s4 <= 
 			img_row_r4        when "00000000",   -- 0   --skinuli nulu spreda
 			img_col_r4        when "00000001",   -- 90	--skinuli nulu spreda
-			stat_img_m_1_size_s - img_row_r4   when "00000010",	  -- 180
-			stat_img_m_1_size_s - img_col_r4   when others;       -- 270
+			stat_img_size - img_row_r4   when "00000010",	  -- 180
+			stat_img_size - img_col_r4   when others;       -- 270
 			
 	process(clk_i) begin
 		if rising_edge(clk_i) then
@@ -507,7 +475,7 @@ architecture Behavioral of battle_city is
 			
 	img_tex_offset_s5 <= 
 		img_tex_row_r5 & img_tex_col_r5
-		when stat_img_size_is_16_r = '1' else 
+		when stat_img_size_is_16 = '1' else 
 		"00" & img_tex_row_r5(2 downto 0) & img_tex_col_r5(2 downto 0);
 	
 	process(clk_i) begin
