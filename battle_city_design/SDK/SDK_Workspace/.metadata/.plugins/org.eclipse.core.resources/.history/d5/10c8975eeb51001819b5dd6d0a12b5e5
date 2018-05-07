@@ -547,7 +547,7 @@ void battle_city() {
 	int block;
 
 	//map_reset(map1);
-//  map_update(&mario);
+	//map_update(&mario);
 
 	//chhar_spawn(&enemie1);
 	//chhar_spawn(&enemie2);

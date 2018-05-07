@@ -88,9 +88,8 @@ typedef struct {
 	unsigned int reg_h;
 } characters;
 
-characters mario = {
-		16,	                          // x
-		16, 		                     // y
+characters mario = { 320,	                          // x
+		240, 		                     // y
 		DIR_RIGHT,              		// dir
 		IMG_16x16_enemi1,  			// type
 
@@ -546,16 +545,14 @@ void battle_city() {
 	int i, change = 0, jumpFlag = 0;
 	int block;
 
-	//map_reset(map1);
-//  map_update(&mario);
+	map_reset(map1);
+	//map_update(&mario);
 
 	//chhar_spawn(&enemie1);
 	//chhar_spawn(&enemie2);
 	//chhar_spawn(&enemie3);
 	//chhar_spawn(&enemie4);
-#if 1
 	chhar_spawn(&mario);
-#else
 
 	map_update(&mario);
 
@@ -591,5 +588,4 @@ void battle_city() {
 		}
 
 	}
-#endif
 }
