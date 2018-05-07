@@ -26,8 +26,8 @@
 #define MAP_W							64
 #define MAP_H							56
 
-#define REGS_BASE_ADDRESS               ( MAP_BASE_ADDRESS + MAP_WIDTH * MAP_HEIGHT )
-//#define REGS_BASE_ADDRESS               (5439)
+#define REGS_BASE_ADDRESS               4096
+
 
 #define BTN_DOWN( b )                   ( !( b & 0x01 ) )
 #define BTN_UP( b )                     ( !( b & 0x10 ) )
@@ -89,7 +89,7 @@ typedef struct {
 } characters;
 
 characters mario = {
-		16,	                          // x
+		16+8,	                          // x
 		16, 		                     // y
 		DIR_RIGHT,              		// dir
 		IMG_16x16_mario,  			// type
@@ -553,8 +553,12 @@ void battle_city() {
 	//chhar_spawn(&enemie2);
 	//chhar_spawn(&enemie3);
 	//chhar_spawn(&enemie4);
-#if 0
+#if 1
 	chhar_spawn(&mario);
+#elif 0
+	chhar_spawn(&mario);
+	map_update(&mario);
+
 #else
 
 	map_update(&mario);

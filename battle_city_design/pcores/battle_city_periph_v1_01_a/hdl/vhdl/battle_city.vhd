@@ -31,7 +31,7 @@ end entity battle_city;
 
 architecture Behavioral of battle_city is
     constant MAP_OFFSET : natural := 639; -- Pointer to start of map in memory
-    constant REGISTER_OFFSET : natural := (MAP_OFFSET + 40*30); -- 5439 -- Pointer to registers in memory map
+    constant REGISTER_OFFSET : natural := 4096; -- 1 << (ADDR_WIDTH-1) - upper part of addr space. 
 
    component ram 	
    port
@@ -401,10 +401,12 @@ architecture Behavioral of battle_city is
    -- map_index_s = (row/8)*80 + col/8;
 	map_index_size_8_s0  <= unsigned('0' & map_row_size_8_s & "000000") 
                    + unsigned('0' & map_row_size_8_s & "0000")
+						 + unsigned('0' & map_row_size_8_s)
                    + map_col_size_8_s;
 						 
 	map_index_size_16_s0  <= unsigned ("000" & map_row_size_16_s & "00000") 
                    + unsigned("000" & map_row_size_16_s & "000")
+						 + unsigned("000" & map_row_size_16_s)
                    + map_col_size_16_s;
 						 
 	map_index_s0 <= map_index_size_16_s0 when stat_img_size_is_16_r = '1' else map_index_size_8_s0;
