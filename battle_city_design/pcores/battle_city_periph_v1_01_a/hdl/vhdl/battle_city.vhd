@@ -145,6 +145,9 @@ architecture Behavioral of battle_city is
 	
 	signal stat_img_size_is_16_r  : std_logic;
 	signal stat_img_size_m_1_s        : unsigned(3 downto 0);
+	
+	signal offset_row_r : unsigned(3 downto 0);
+	signal offset_col_r : unsigned(3 downto 0);
 	signal offseted_pixel_row_s : unsigned(8 downto 0);
 	signal offseted_pixel_col_s : unsigned(9 downto 0);
 	signal map_row_size_8_s  : std_logic_vector(8 downto 3);
@@ -332,12 +335,14 @@ architecture Behavioral of battle_city is
 
 	-- TODO Registars.
 	stat_img_size_is_16_r <= '1';--uvek 16x16
+	offset_row_r <= x"8";
+	offset_col_r <= x"8";
 
 	--if 7 when 8 then 15 when 16? bravo una
 	stat_img_size_m_1_s <= "1111" when stat_img_size_is_16_r = '1' else "0111";
 
-	offseted_pixel_row_s <= pixel_row_i;
-	offseted_pixel_col_s <= pixel_col_i;
+	offseted_pixel_row_s <= pixel_row_i + offset_row_r;
+	offseted_pixel_col_s <= pixel_col_i + offset_col_r;
 	map_row_size_8_s <= std_logic_vector(offseted_pixel_row_s(8 downto 3));
 	map_col_size_8_s <= offseted_pixel_col_s(9 downto 3);
    map_row_size_16_s <= std_logic_vector(offseted_pixel_row_s(8 downto 4));
@@ -396,18 +401,19 @@ architecture Behavioral of battle_city is
 
 	
 	
-	
-	
-   -- map_index_s = (row/8)*80 + col/8;
-	map_index_size_8_s0  <= unsigned('0' & map_row_size_8_s & "000000") 
-                   + unsigned('0' & map_row_size_8_s & "0000")
-						 + unsigned('0' & map_row_size_8_s)
-                   + map_col_size_8_s;
+   -- map_index_s = (row/8)*81 + col/8;
+	map_index_size_8_s0  <= 
+				unsigned('0' & map_row_size_8_s & "000000") + -- *64
+            unsigned('0' & map_row_size_8_s & "0000") + -- *16
+				unsigned('0' & map_row_size_8_s) + -- *1
+                map_col_size_8_s;
 						 
-	map_index_size_16_s0  <= unsigned ("000" & map_row_size_16_s & "00000") 
-                   + unsigned("000" & map_row_size_16_s & "000")
-						 + unsigned("000" & map_row_size_16_s)
-                   + map_col_size_16_s;
+	-- map_index_s = (row/16)*41 + col/16;
+	map_index_size_16_s0  <= 
+				unsigned("000" & map_row_size_16_s & "00000") + -- *32
+            unsigned("000" & map_row_size_16_s & "000") + -- *8
+				unsigned("000" & map_row_size_16_s) + -- *1
+                map_col_size_16_s;
 						 
 	map_index_s0 <= map_index_size_16_s0 when stat_img_size_is_16_r = '1' else map_index_size_8_s0;
 
