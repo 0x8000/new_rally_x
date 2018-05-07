@@ -64,9 +64,6 @@ int udario_u_blok = 0;
 
 int mario_se_pomerio = 0;
 
-int mario_map_x = 16;
-int mario_map_y = 9;
-
 typedef enum {
 	b_false, b_true
 } bool_t;
@@ -88,8 +85,8 @@ typedef struct {
 	unsigned int reg_h;
 } characters;
 
-characters mario = { 320,	                          // x
-		240, 		                     // y
+characters mario = { 280,	                        // x
+		150, 		                     // y
 		DIR_RIGHT,              		// dir
 		IMG_16x16_enemi1,  			// type
 
@@ -166,11 +163,10 @@ static void chhar_spawn(characters * chhar) {
 
 static void map_update(characters * mario) {
 	int x, y;
-
 	long int addr;
 
 
-/*
+
 		if(mario_se_pomerio == 1){
 				if((mario->x >= 450) && (mario->x <= 640)){
 					if (udario_u_blok <= 0) {
@@ -192,39 +188,12 @@ static void map_update(characters * mario) {
 				mario_se_pomerio = 0;
 		}
 
-	*/
-
-	int current_mario_map_x = mario->x /16;
-	int current_mario_map_y = mario->y /16;
-	//printf(" map x is: %d",current_mario_map_x);
-
-	int i = current_mario_map_x - mario_map_x;
-	int j = current_mario_map_y - mario_map_y;
-
-	mario_map_x = current_mario_map_x;
-	mario_map_y = current_mario_map_y;
-
-
-	float Xx;
-	float Yy;
-	int roundX = 0;
-	int roundY = 0;
-
-	Xx = mario->x;
-	Yy = mario->y;
-
-	roundX = floor(Xx / 16);
-	roundY = floor(Yy / 16);
-
-
-
-	int z,w;
 
 	for (y = 0; y < MAP_HEIGHT; y++) {
 		for (x = 0; x < MAP_WIDTH; x++) {
 			addr = XPAR_BATTLE_CITY_PERIPH_0_BASEADDR
 					+ 4 * (MAP_BASE_ADDRESS + y * MAP_WIDTH + x);
-			switch (map1[(roundY-15)+y][(roundX-20)+x]) {
+			switch (map1[y][x + map_move]) {
 			case 0:
 				Xil_Out32(addr, IMG_16x16_crno);
 				break;
@@ -248,10 +217,7 @@ static void map_update(characters * mario) {
 				break;
 			}
 		}
-
 	}
-
-
 }
 
 static void map_reset(unsigned char * map) {
@@ -409,20 +375,10 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	mario->x = x;
 	mario->y = y;
 
-	if(dir == DIR_RIGHT){
-		if( (mario->x % 16) == 15)
-			Xil_Out32(
-						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( REGS_BASE_ADDRESS + mario->reg_h ),
-						(((mario->y%16)+240) << 16) | (10)+320);
-
-
-	}
-
-	else{
 	Xil_Out32(
 			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( REGS_BASE_ADDRESS + mario->reg_h ),
-			(((mario->y%16)+240)  << 16) | (mario->x%16)+320);
-	}
+			(mario->y << 16) | mario->x);
+
 	return b_false;
 }
 
@@ -546,15 +502,13 @@ void battle_city() {
 	int block;
 
 	map_reset(map1);
-	//map_update(&mario);
+	map_update(&mario);
 
 	//chhar_spawn(&enemie1);
 	//chhar_spawn(&enemie2);
 	//chhar_spawn(&enemie3);
 	//chhar_spawn(&enemie4);
 	chhar_spawn(&mario);
-
-	map_update(&mario);
 
 	while (1) {
 
