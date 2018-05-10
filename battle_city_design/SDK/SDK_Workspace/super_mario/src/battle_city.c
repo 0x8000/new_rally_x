@@ -92,8 +92,8 @@ typedef struct {
 } characters;
 
 characters mario = {
-		16+8,	                          // x
-		16, 		                     // y
+		320,	                          // x
+		240, 		                     // y
 		DIR_RIGHT,              		// dir
 		IMG_16x16_mario,  			// type
 
@@ -220,16 +220,14 @@ static void map_update(characters * mario) {
 	roundX = floor(Xx / 16);
 	roundY = floor(Yy / 16);
 
-
-
 	int z,w;
 
 	for (y = 0; y < MAP_HEIGHT; y++) {
 		for (x = 0; x < MAP_WIDTH; x++) {
 			addr = XPAR_BATTLE_CITY_PERIPH_0_BASEADDR
 					+ 4 * (MAP_BASE_ADDRESS + y * MAP_WIDTH + x);
-			//switch (map1[(roundY-15)+y][(roundX-20)+x]) {
-			switch (map1[y][x]) {
+			switch (map1[(roundY-15)+y][(roundX-20)+x]) {
+			//switch (map1[y][x]) {
 			case 0:
 				Xil_Out32(addr, IMG_16x16_crno);
 				break;
@@ -273,6 +271,9 @@ static void map_reset(unsigned char * map) {
 
 static bool_t mario_move(unsigned char * map, characters * mario,
 		direction_t dir, int start_jump) {
+
+
+
 	unsigned int x;
 	unsigned int y;
 	int i, j;
@@ -281,8 +282,26 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	float Yy;
 	int roundX = 0;
 	int roundY = 0;
+	u8 offset_x;
+	u8 offset_y;
 
 	int obstackle = 0;
+
+	if(dir == DIR_RIGHT){
+		mario->x++;
+	}
+	x = mario->x;
+	y = mario->y;
+
+	offset_x = x & 0xf; // % 16
+
+	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, offset_x);
+
+
+
+	return b_false;
+
+	// TODO Nicer.
 
 	if (mario->x > ((MAP_X + MAP_WIDTH) * 16 - 16)
 			|| mario->y > (MAP_Y + MAP_HEIGHT) * 16 - 16) {
@@ -292,12 +311,18 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	x = mario->x;
 	y = mario->y;
 
+	offset_x = x & 0xf; // % 16
+
+	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, offset_x);
+
+
+
 	if (dir == DIR_LEFT) {
-		if (x > MAP_X * 16) {
-			x--;
-		}
+		//Xil_Out32(OFFSET_COL_REG_OFFSET, (x % 16));
+		x--;
 	} else if (dir == DIR_RIGHT) {
 		x++;
+		//Xil_Out32(OFFSET_COL_REG_OFFSET, -(x % 16));
 		mario_se_pomerio = 1;
 	} else if (dir == DIR_UP) {
 		y--;
@@ -373,11 +398,9 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	case 2: {
 		//blok
 		if (dir == DIR_LEFT) {
-			if (x > MAP_X * 16) {
-				x++;
-			}
+			Xil_Out32(OFFSET_COL_REG_OFFSET, 1);
 		} else if (dir == DIR_RIGHT) {
-			x--;
+			Xil_Out32(OFFSET_COL_REG_OFFSET, -1);
 		} else if (dir == DIR_UP) {
 			y++;
 		} else if (dir == DIR_DOWN) {
@@ -414,6 +437,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	mario->x = x;
 	mario->y = y;
 
+	/*
 	if(dir == DIR_RIGHT){
 		if( (mario->x % 16) == 15)
 			Xil_Out32(
@@ -428,6 +452,8 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( REGS_BASE_ADDRESS + mario->reg_h ),
 			(((mario->y%16)+240)  << 16) | (mario->x%16)+320);
 	}
+	*/
+
 	return b_false;
 }
 
@@ -563,9 +589,12 @@ void battle_city() {
 	chhar_spawn(&mario);
 	map_update(&mario);
 
-#else
+	// TODO Testing.
+	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, 8);
 
-	map_update(&mario);
+//#else
+
+	//map_update(&mario);
 
 	while (1) {
 
