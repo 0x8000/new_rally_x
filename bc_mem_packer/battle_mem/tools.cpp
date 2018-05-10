@@ -148,6 +148,7 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
     FindClose( find );
 }
 
+// Using 0-9, a-z and A-Z 
 void create_our_map() {
 	FILE *f;
 
@@ -158,9 +159,9 @@ void create_our_map() {
 
 	for (int i = 0; i < MAP_ROW_SIZE; i++) {
 		for (int j = 0; j < MAP_COL_SIZE - 1; j++) {
-			fprintf(f, "00 | ");
+			fprintf(f, "0");
 		}
-		fprintf(f, "00\n");
+		fprintf(f, "0\n");
 	}
 
 	fclose(f);
