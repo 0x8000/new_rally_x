@@ -148,6 +148,24 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
     FindClose( find );
 }
 
+void create_our_map() {
+	FILE *f;
+
+	if (!(f = fopen("bin\\empty_rally_map.map", "w"))) {
+		printf("Couldn't open 'empty_rally_map.map' file!\n");
+		return;
+	}
+
+	for (int i = 0; i < MAP_ROW_SIZE; i++) {
+		for (int j = 0; j < MAP_COL_SIZE - 1; j++) {
+			fprintf(f, "00 | ");
+		}
+		fprintf(f, "00\n");
+	}
+
+	fclose(f);
+}
+
 void create_test_map( )
 {
     unsigned int    x;
@@ -199,7 +217,7 @@ void map_to_mem( FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned lon
     unsigned int i, j = 0;
 
     fprintf( def_file, "#define MAP_BASE_ADDRESS\t\t\t0x%.4X", *base_addr );
-    for( i = 0; i < NUM_MAP_ENTRIES; i++ ) {
+    for( i = 0; i < MAP_AREA_SIZE; i++ ) {
 
 		//matrica[30][160]
 
@@ -207,7 +225,7 @@ void map_to_mem( FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned lon
 
         fprintf( hdr_file, "unsigned char  map1[30][160] = {\n" );
 
-		for( i = 0; i < NUM_MAP_ENTRIES; i++ ) {
+		for( i = 0; i < MAP_AREA_SIZE; i++ ) {
 			//fprintf( mem_file, "%d\n", map[ i ].z );
 			fprintf( mem_file, "\t\t%lu =>\tx\"%.2X%.2X%.4X\", -- z: %d rot: %d ptr: %d\n", *base_addr,
                                                                                          map[ i ].z,
@@ -220,12 +238,12 @@ void map_to_mem( FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned lon
 			{
 				fprintf( hdr_file, "{ " );
 			}
-			fprintf( hdr_file, ( i == NUM_MAP_ENTRIES - 1 ) ? "%d, "
+			fprintf( hdr_file, ( i == MAP_AREA_SIZE - 1 ) ? "%d, "
 															: "%d, ", map[ i ].z);
 			if(j >= 159)
 				fprintf( hdr_file, "\n{ " );
 			}
-			fprintf( hdr_file, ( i == NUM_MAP_ENTRIES - 1 ) ? "%d, "
+			fprintf( hdr_file, ( i == MAP_AREA_SIZE - 1 ) ? "%d, "
 															: "%d, ", map[ i ].z);
 			if(j >= 79)
 			{

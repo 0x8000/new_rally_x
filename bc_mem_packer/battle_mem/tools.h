@@ -10,6 +10,10 @@
 #define COLOR_PALLETE_BASE_ADDR 0x0000
 #define IMAGE_8x8_BASE_ADDR     0x00FF
 
+#define MAP_ROW_SIZE 80
+#define MAP_COL_SIZE 100
+#define MAP_AREA_SIZE (MAP_ROW_SIZE * MAP_COL_SIZE)
+
 #define NUM_MAP_ENTRIES         ( 160 * 30 )
 
 typedef enum {
@@ -38,5 +42,6 @@ void    image_to_mem( FILE * f, unsigned long addr, unsigned char * img, unsigne
 void    process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigned long * base_addr, unsigned char type );
 void    create_test_map( );
 void    map_to_mem( FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned long * base_addr );
+void create_our_map();
 
 #endif // _IMAGES_H
