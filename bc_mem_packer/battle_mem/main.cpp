@@ -72,12 +72,15 @@ int main( )
     fprintf( mem_file, "\n\n--\t\t\t***** 16x16 IMAGES *****\n\n\n" );
     fprintf( def_file, "\n\n// ***** 16x16 IMAGES *****\n\n" );
 
-    process_images( dir, mem_file, def_file, &base_addr, IMG_16x16 );
+    process_images( dir, mem_file, def_file, &base_addr, IMG_16x16);
 
     fprintf( mem_file, "\n\n--\t\t\t***** MAP *****\n\n\n" );
     fprintf( def_file, "\n\n// ***** MAP *****\n\n" );
 
 	create_our_map();
+
+	merge_names_and_ids();
+
     //create_test_map( );
     map_to_mem( mem_file, def_file, hdr_file, &base_addr );
 

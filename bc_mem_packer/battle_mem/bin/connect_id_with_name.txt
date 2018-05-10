@@ -1,0 +1,6 @@
+cigle.bmp 1
+coin.bmp 2
+crno.bmp A
+enemi1.bmp a
+mario.bmp B
+plavacigla.bmp 0

@@ -4,6 +4,7 @@
 color_t     color_pallete[ 256 ];
 map_entry_t map[ NUM_MAP_ENTRIES ];
 int         num_colors;
+Sprite sprites[NUMBER_OF_SPRITES];
 
 void colors_to_mem( FILE * f, unsigned long addr )
 {
@@ -104,6 +105,69 @@ void image_to_mem( FILE * f, unsigned long addr, unsigned char * img, unsigned c
     }
 }
 
+void merge_names_and_ids() {
+	FILE *f;
+	char file_name[NUMBER_OF_SPRITES][LINE_SIZE];
+	char id[NUMBER_OF_SPRITES];
+
+	if (!(f = fopen("bin\\connect_id_with_name.txt", "r"))) {
+		printf("Couldn't open 'connect_id_with_name.txt' file!\n");
+		return;
+	}
+
+	// Matrix init
+	char file_line[NUMBER_OF_SPRITES][LINE_SIZE];
+	for (int i = 0; i < NUMBER_OF_SPRITES; i++) {
+		for (int j = 0; j < LINE_SIZE; j++) {
+			file_name[i][j] = ' ';
+			file_line[i][j] = ' ';
+		}
+		id[i] = ' ';
+	}
+
+	// Getting file names and id in matrix
+	char tmp;
+	unsigned int sprite_num = 0;
+	unsigned int line_num = 0;
+
+	// Line example: "ime_fajla.bmp 9"
+	while ((tmp = fgetc(f)) != EOF) {
+		if (tmp != '\n') {
+			file_line[sprite_num][line_num++] = tmp;
+		}
+		else {
+			line_num = 0;
+			sprite_num++;
+		}
+	}
+
+	// Get names and ids
+	for (int i = 0; i < NUMBER_OF_SPRITES; i++) {
+		for (int j = 0; j < LINE_SIZE; j++) {
+			if (file_line[i][j] != ' ') {
+				file_name[i][j] = file_line[i][j];
+			}
+			else {
+				file_name[i][j] = '\0';
+				id[i] = file_line[i][++j];
+				break;
+			}
+		}
+	}
+
+	// Compare file_name and Sprite.file_name and set id
+	for (int i = 0; i < NUMBER_OF_SPRITES; i++) {
+		for (int j = 0; j < NUMBER_OF_SPRITES; j++) {
+			if (strcmp(file_name[i], sprites[j].sprite_name) == 0) {
+				sprites[j].id = id[i];
+				break;
+			}
+		}
+	}
+
+	fclose(f);
+}
+
 void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigned long * base_addr, unsigned char type )
 {
     char            search_dir[ MAX_PATH ];
@@ -112,6 +176,7 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
     unsigned char * img;
     WIN32_FIND_DATA find_data;
     HANDLE          find;
+	unsigned int sprite_number = 0;
 
     sprintf( search_dir, ( type == IMG_16x16 ) ? "%s\\16x16\\*.bmp" : "%s\\8x8\\*.bmp", dir );
 
@@ -123,6 +188,19 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
     do {
         if( !( find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) ) {
             sprintf( file_path, ( type == IMG_16x16 ) ? "%s\\16x16\\%s" : "%s\\8x8\\%s", dir, find_data.cFileName );
+
+			//sprites[sprite_number].sprite_name = find_data.cFileName;
+			strcpy(sprites[sprite_number].sprite_name, find_data.cFileName);
+
+#if 0
+			int i = 0;
+			while (find_data.cFileName[i] != '\0') {
+				sprites[sprite_number].sprite_name[i] = find_data.cFileName[i];
+				i++;
+			}
+#endif
+
+			sprites[sprite_number].address = *base_addr;
 
             if( !( img = load_bitmap( file_path ) ) ) {
                 printf( "Failed to open: %s\n", file_path );
@@ -140,6 +218,9 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
 
             // Each image row gets split into 4 byte parts in order to fit memory size.
             *base_addr += ( type == IMG_16x16 ) ? (16 * 4) : (8 * 2);
+
+			// Uvecavamo sprite_number kada smo pronasi novi sprite
+			sprite_number++;
 
             free( img );
         }
