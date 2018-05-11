@@ -297,78 +297,41 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 
 	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, offset_x);
 
+	if(dir == DIR_LEFT){
+			mario->x--;
+		}
+		x = mario->x;
+		y = mario->y;
+
+		offset_x = x & 0xf; // % 16
+
+		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, offset_x);
+
+	if(dir == DIR_UP){
+			mario->y--;
+		}
+		x = mario->x;
+		y = mario->y;
+
+		offset_y = y & 0xf; // % 16
+
+		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET, offset_y);
+	if(dir == DIR_DOWN){
+			mario->y++;
+		}
+		x = mario->x;
+		y = mario->y;
+
+		offset_y = y & 0xf; // % 16
+
+		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET, offset_y);
+
+
 
 
 	return b_false;
 
-	// TODO Nicer.
 
-	if (mario->x > ((MAP_X + MAP_WIDTH) * 16 - 16)
-			|| mario->y > (MAP_Y + MAP_HEIGHT) * 16 - 16) {
-		return b_false;
-	}
-
-	x = mario->x;
-	y = mario->y;
-
-	offset_x = x & 0xf; // % 16
-
-	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, offset_x);
-
-
-
-	if (dir == DIR_LEFT) {
-		//Xil_Out32(OFFSET_COL_REG_OFFSET, (x % 16));
-		x--;
-	} else if (dir == DIR_RIGHT) {
-		x++;
-		//Xil_Out32(OFFSET_COL_REG_OFFSET, -(x % 16));
-		mario_se_pomerio = 1;
-	} else if (dir == DIR_UP) {
-		y--;
-		/*
-		if (y > MAP_Y * 16) {
-			for (i = 0; i < 30; i++) {
-				y--;
-				brojac++;
-
-				mario->y = y;
-
-				Xil_Out32(
-						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + mario->reg_h ),
-						(mario->y << 16) | mario->x);
-				for (j = 0; j < 100000; j++) {
-				}
-			}
-		}
-		while (brojac != 0) {
-			y++;
-			brojac--;
-		}
-		*/
-	} else if (dir == DIR_DOWN){
-		y++;
-	}
-	if (start_jump == 1) {
-		if (y > MAP_Y * 16) {
-			for (i = 0; i < 30; i++) {
-				y--;
-				brojac++;
-				if (dir == DIR_LEFT)
-					x--;
-				else
-					x++;
-				mario->x = x;
-				mario->y = y;
-
-				Xil_Out32(
-						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + mario->reg_h ),
-						(mario->y << 16) | mario->x);
-				for (j = 0; j < 100000; j++) {
-				}
-			}
-		}
-	}
 	while (brojac != 0) {
 		y++;
 		brojac--;
