@@ -2,7 +2,7 @@
 #include "bitmap.h"
 
 color_t     color_pallete[ 256 ];
-map_entry_t map[ NUM_MAP_ENTRIES ];
+map_entry_t map[ MAP_AREA_SIZE ];
 int         num_colors;
 Sprite sprites[NUMBER_OF_SPRITES];
 
@@ -287,49 +287,42 @@ void create_test_map( )
 
 void map_to_mem( FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned long * base_addr )
 {
-    unsigned int i, j = 0;
-
+	// For def.txt
     fprintf( def_file, "#define MAP_BASE_ADDRESS\t\t\t0x%.4X", *base_addr );
-    for( i = 0; i < MAP_AREA_SIZE; i++ ) {
 
-		//matrica[30][160]
+	// For map.vhdl
+	for (unsigned int i = 0; i < MAP_AREA_SIZE; i++) {
+		fprintf(mem_file, "\t\t%lu =>\tx\"%.2X%.2X%.4X\", -- z: %d rot: %d ptr: %d\n", *base_addr,
+			map[i].z,
+			map[i].rot,
+			map[i].ptr,
+			map[i].z,
+			map[i].rot,
+			map[i].ptr);
 
-		fprintf( hdr_file, "#ifndef _MAP_H_\n", *base_addr );
+		*base_addr++;
+	}
 
-        fprintf( hdr_file, "unsigned char  map1[30][160] = {\n" );
-
-		for( i = 0; i < MAP_AREA_SIZE; i++ ) {
-			//fprintf( mem_file, "%d\n", map[ i ].z );
-			fprintf( mem_file, "\t\t%lu =>\tx\"%.2X%.2X%.4X\", -- z: %d rot: %d ptr: %d\n", *base_addr,
-                                                                                         map[ i ].z,
-                                                                                         map[ i ].rot,
-                                                                                         map[ i ].ptr,
-                                                                                         map[ i ].z,
-                                                                                         map[ i ].rot,
-                                                                                         map[ i ].ptr );
-			if(j == 0)
-			{
-				fprintf( hdr_file, "{ " );
+	// For map.h
+	fprintf(hdr_file, "#ifndef _MAP_H_\n\n");
+	fprintf(hdr_file, "unsigned char map1[%d][%d] = {\n", MAP_ROW_SIZE, MAP_COL_SIZE);
+			
+	for (unsigned int i = 0; i < MAP_ROW_SIZE; i++) {
+		for (unsigned int j = 0; j < MAP_COL_SIZE; j++) {
+			if (j == 0) {
+				fprintf(hdr_file, "{ %d, ", map[i * j + j].z);
 			}
-			fprintf( hdr_file, ( i == MAP_AREA_SIZE - 1 ) ? "%d, "
-															: "%d, ", map[ i ].z);
-			if(j >= 159)
-				fprintf( hdr_file, "\n{ " );
+			else if ((j > 0) && (j < MAP_COL_SIZE - 1)) {
+				fprintf(hdr_file, "%d, ", map[i * j + j].z);
 			}
-			fprintf( hdr_file, ( i == MAP_AREA_SIZE - 1 ) ? "%d, "
-															: "%d, ", map[ i ].z);
-			if(j >= 79)
-			{
-				fprintf( hdr_file, " },\n");
-				j = 0;
+			else if ((j == MAP_COL_SIZE - 1) && (i == MAP_ROW_SIZE - 1)) {
+				fprintf(hdr_file, "%d}\n", map[i * j + j].z);
 			}
-			else
-			{
-				j++;
+			else if (j == MAP_COL_SIZE - 1){
+				fprintf(hdr_file, "%d},\n", map[i * j + j].z);
 			}
-
-			*base_addr += 1;
 		}
+	}
 
-		fprintf( hdr_file, "\n};\n" );
+	fprintf(hdr_file, "}\n");
 }
