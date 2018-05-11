@@ -189,17 +189,7 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
         if( !( find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) ) {
             sprintf( file_path, ( type == IMG_16x16 ) ? "%s\\16x16\\%s" : "%s\\8x8\\%s", dir, find_data.cFileName );
 
-			//sprites[sprite_number].sprite_name = find_data.cFileName;
 			strcpy(sprites[sprite_number].sprite_name, find_data.cFileName);
-
-#if 0
-			int i = 0;
-			while (find_data.cFileName[i] != '\0') {
-				sprites[sprite_number].sprite_name[i] = find_data.cFileName[i];
-				i++;
-			}
-#endif
-
 			sprites[sprite_number].address = *base_addr;
 
             if( !( img = load_bitmap( file_path ) ) ) {
