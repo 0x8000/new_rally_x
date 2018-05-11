@@ -31,10 +31,10 @@ end entity battle_city;
 
 architecture Behavioral of battle_city is
     constant MAP_OFFSET : natural := 639; -- Pointer to start of map in memory
-    constant REGISTER_OFFSET : natural := 4096; -- 1 << (ADDR_WIDTH-1) - upper part of addr space. 
+    constant SPRITES_REG_OFFSET : natural := 4096; -- 1 << (ADDR_WIDTH-1) - upper part of addr space. 
     constant OFFSET_ROW_REG_OFFSET : natural := 4096+2048+0;
-	 constant OFFSET_COL_REG_OFFSET : natural := 4096+2048+1;
-	 constant STAT_IMG_SIZE_IS_16_REG_OFFSET : natural := 4096+2048+2;
+	constant OFFSET_COL_REG_OFFSET : natural := 4096+2048+1;
+	constant STAT_IMG_SIZE_IS_16_REG_OFFSET : natural := 4096+2048+2;
 
    component ram 	
    port
@@ -76,8 +76,9 @@ architecture Behavioral of battle_city is
     ( x"0130" & x"01f3" & x"7f" & x"00" & x"013F" ),
     ( x"0000" & x"0090" & x"7f" & x"00" & x"00FF" )); --brick
     
-	signal reg_word_addr : signed(ADDR_WIDTH-1 downto 0);
-	signal reg_idx       : signed(ADDR_WIDTH-1 downto 1);
+	signal local_addr_s  : unsigned(ADDR_WIDTH-1 downto 0);	
+	signal reg_word_addr : unsigned(ADDR_WIDTH-1 downto 0);
+	signal reg_idx       : unsigned(ADDR_WIDTH-1 downto 1);
 	 
    signal thrd_stg_addr_s  : unsigned(ADDR_WIDTH-1 downto 0);              -- Addresses needed in third stage
    signal scnd_stg_addr_s  : unsigned(ADDR_WIDTH-1 downto 0);              -- Addresses needed in second stage
@@ -99,7 +100,6 @@ architecture Behavioral of battle_city is
    signal mem_address_s    : std_logic_vector(ADDR_WIDTH-1 downto 0);      -- Address used to read from memory
 	
    -- Zero stage --
-   signal local_addr_s     : signed(ADDR_WIDTH-1 downto 0);	
    signal reg_size_s       : size_t;
    signal reg_en_s         : std_logic_vector(REGISTER_NUMBER-1 downto 0);
    signal reg_pointer_s    : pointer_t;
@@ -320,24 +320,24 @@ architecture Behavioral of battle_city is
    --                            GLOBAL                                             --
    -----------------------------------------------------------------------------------
 
-	local_addr_s <= signed(bus_addr_i) - C_BASEADDR;
+	local_addr_s <= unsigned(bus_addr_i) - C_BASEADDR;
 	
-	reg_word_addr <= signed(local_addr_s) - REGISTER_OFFSET;
+	reg_word_addr <= local_addr_s - SPRITES_REG_OFFSET;
 	reg_idx <= reg_word_addr(ADDR_WIDTH-1 downto 1);
 	process(clk_i) begin
 		if rising_edge(clk_i) then
 			if bus_we_i = '1' then
-				if 0 <= reg_word_addr and reg_word_addr < REGISTER_NUMBER*2 then
+				if SPRITES_REG_OFFSET <= local_addr_s and local_addr_s < SPRITES_REG_OFFSET+REGISTER_NUMBER*2 then
 					if reg_word_addr(0) = '1' then
 						registers_s(to_integer(reg_idx))(63 downto 32) <= unsigned(bus_data_i);
 					else
 						registers_s(to_integer(reg_idx))(31 downto 0) <= unsigned(bus_data_i);
 					end if;
-				elsif reg_word_addr = OFFSET_ROW_REG_OFFSET then
+				elsif local_addr_s = OFFSET_ROW_REG_OFFSET then
 					offset_row_r <= unsigned(bus_data_i(offset_row_r'range));
-				elsif reg_word_addr = OFFSET_COL_REG_OFFSET then
+				elsif local_addr_s = OFFSET_COL_REG_OFFSET then
 					offset_col_r <= unsigned(bus_data_i(offset_col_r'range));
-				elsif reg_word_addr = STAT_IMG_SIZE_IS_16_REG_OFFSET then
+				elsif local_addr_s = STAT_IMG_SIZE_IS_16_REG_OFFSET then
 					stat_img_size_is_16_r <= bus_data_i(0);
 				end if;
 			end if;

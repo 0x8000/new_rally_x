@@ -26,7 +26,7 @@
 #define MAP_W							64
 #define MAP_H							56
 
-#define REGS_BASE_ADDRESS               4096
+#define SPRITES_REG_OFFSET               4096
 #define OFFSET_ROW_REG_OFFSET (4096+2048+0)
 #define OFFSET_COL_REG_OFFSET (4096+2048+1)
 #define STAT_IMG_SIZE_IS_16_REG_OFFSET (4096+2048+2)
@@ -161,10 +161,10 @@ unsigned int rand_lfsr113(void) {
 
 static void chhar_spawn(characters * chhar) {
 	Xil_Out32(
-			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( REGS_BASE_ADDRESS + chhar->reg_l ),
+			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + chhar->reg_l ),
 			(unsigned int )0x8F000000 | (unsigned int )chhar->type);
 	Xil_Out32(
-			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( REGS_BASE_ADDRESS + chhar->reg_h ),
+			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + chhar->reg_h ),
 			(chhar->y << 16) | chhar->x);
 }
 
@@ -263,7 +263,7 @@ static void map_reset(unsigned char * map) {
 
 	for (i = 0; i <= 20; i += 2) {
 		Xil_Out32(
-				XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( REGS_BASE_ADDRESS + i ),
+				XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + i ),
 				(unsigned int )0x0F000000);
 	}
 
@@ -335,7 +335,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 				mario->y = y;
 
 				Xil_Out32(
-						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( REGS_BASE_ADDRESS + mario->reg_h ),
+						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + mario->reg_h ),
 						(mario->y << 16) | mario->x);
 				for (j = 0; j < 100000; j++) {
 				}
@@ -362,7 +362,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 				mario->y = y;
 
 				Xil_Out32(
-						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( REGS_BASE_ADDRESS + mario->reg_h ),
+						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + mario->reg_h ),
 						(mario->y << 16) | mario->x);
 				for (j = 0; j < 100000; j++) {
 				}
@@ -441,7 +441,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	if(dir == DIR_RIGHT){
 		if( (mario->x % 16) == 15)
 			Xil_Out32(
-						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( REGS_BASE_ADDRESS + mario->reg_h ),
+						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + mario->reg_h ),
 						(((mario->y%16)+240) << 16) | (10)+320);
 
 
@@ -449,7 +449,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 
 	else{
 	Xil_Out32(
-			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( REGS_BASE_ADDRESS + mario->reg_h ),
+			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + mario->reg_h ),
 			(((mario->y%16)+240)  << 16) | (mario->x%16)+320);
 	}
 	*/
@@ -591,10 +591,16 @@ void battle_city() {
 
 	// TODO Testing.
 	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, 8);
+	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET, 8);
+	//Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*, 1);
 
-//#else
+	Xil_Out32(
+			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + 9 ),
+			0);
+#else
+	chhar_spawn(&mario);
+	map_update(&mario);
 
-	//map_update(&mario);
 
 	while (1) {
 
