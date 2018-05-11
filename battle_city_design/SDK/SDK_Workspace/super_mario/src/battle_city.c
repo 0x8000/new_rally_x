@@ -585,7 +585,7 @@ void battle_city() {
 	//chhar_spawn(&enemie4);
 #if 0
 	chhar_spawn(&mario);
-#elif 1
+#elif 0
 	chhar_spawn(&mario);
 	map_update(&mario);
 
