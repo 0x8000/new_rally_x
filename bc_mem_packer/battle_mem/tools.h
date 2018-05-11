@@ -6,11 +6,20 @@
 
 #include <Windows.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define COLOR_PALLETE_BASE_ADDR 0x0000
 #define IMAGE_8x8_BASE_ADDR     0x00FF
 
+#define MAP_ROW_SIZE 80
+#define MAP_COL_SIZE 100
+#define MAP_AREA_SIZE (MAP_ROW_SIZE * MAP_COL_SIZE)
+
 #define NUM_MAP_ENTRIES         ( 160 * 30 )
+
+#define NUMBER_OF_SPRITES 9
+#define LINE_SIZE 50
 
 typedef enum {
     IMG_8x8,
@@ -29,6 +38,15 @@ typedef struct {
     unsigned short  ptr;
 } map_entry_t;
 
+typedef struct {
+	char sprite_name[LINE_SIZE];  // file name
+	unsigned long address;
+	char id;
+} Sprite;
+
+// TODO: Napraviti da sam unese broj sprajtova koji se nalaze u folderu
+
+
 extern color_t  color_pallete[ 256 ];
 extern int      num_colors;
 
@@ -38,5 +56,7 @@ void    image_to_mem( FILE * f, unsigned long addr, unsigned char * img, unsigne
 void    process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigned long * base_addr, unsigned char type );
 void    create_test_map( );
 void    map_to_mem( FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned long * base_addr );
+void create_our_map();
+void merge_names_and_ids();
 
 #endif // _IMAGES_H

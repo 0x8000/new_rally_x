@@ -2,8 +2,9 @@
 #include "bitmap.h"
 
 color_t     color_pallete[ 256 ];
-map_entry_t map[ NUM_MAP_ENTRIES ];
+map_entry_t map[ MAP_AREA_SIZE ];
 int         num_colors;
+Sprite sprites[NUMBER_OF_SPRITES];
 
 void colors_to_mem( FILE * f, unsigned long addr )
 {
@@ -104,6 +105,69 @@ void image_to_mem( FILE * f, unsigned long addr, unsigned char * img, unsigned c
     }
 }
 
+void merge_names_and_ids() {
+	FILE *f;
+	char file_name[NUMBER_OF_SPRITES][LINE_SIZE];
+	char id[NUMBER_OF_SPRITES];
+
+	if (!(f = fopen("bin\\connect_id_with_name.txt", "r"))) {
+		printf("Couldn't open 'connect_id_with_name.txt' file!\n");
+		return;
+	}
+
+	// Matrix init
+	char file_line[NUMBER_OF_SPRITES][LINE_SIZE];
+	for (int i = 0; i < NUMBER_OF_SPRITES; i++) {
+		for (int j = 0; j < LINE_SIZE; j++) {
+			file_name[i][j] = ' ';
+			file_line[i][j] = ' ';
+		}
+		id[i] = ' ';
+	}
+
+	// Getting file names and id in matrix
+	char tmp;
+	unsigned int sprite_num = 0;
+	unsigned int line_num = 0;
+
+	// Line example: "ime_fajla.bmp 9"
+	while ((tmp = fgetc(f)) != EOF) {
+		if (tmp != '\n') {
+			file_line[sprite_num][line_num++] = tmp;
+		}
+		else {
+			line_num = 0;
+			sprite_num++;
+		}
+	}
+
+	// Get names and ids
+	for (int i = 0; i < NUMBER_OF_SPRITES; i++) {
+		for (int j = 0; j < LINE_SIZE; j++) {
+			if (file_line[i][j] != ' ') {
+				file_name[i][j] = file_line[i][j];
+			}
+			else {
+				file_name[i][j] = '\0';
+				id[i] = file_line[i][++j];
+				break;
+			}
+		}
+	}
+
+	// Compare file_name and Sprite.file_name and set id
+	for (int i = 0; i < NUMBER_OF_SPRITES; i++) {
+		for (int j = 0; j < NUMBER_OF_SPRITES; j++) {
+			if (strcmp(file_name[i], sprites[j].sprite_name) == 0) {
+				sprites[j].id = id[i];
+				break;
+			}
+		}
+	}
+
+	fclose(f);
+}
+
 void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigned long * base_addr, unsigned char type )
 {
     char            search_dir[ MAX_PATH ];
@@ -112,8 +176,9 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
     unsigned char * img;
     WIN32_FIND_DATA find_data;
     HANDLE          find;
+	unsigned int sprite_number = 0;
 
-    sprintf( search_dir, ( type == IMG_16x16 ) ? "%s\\8x8\\*.bmp" : "%s\\16x16\\*.bmp", dir );
+    sprintf( search_dir, ( type == IMG_16x16 ) ? "%s\\16x16\\*.bmp" : "%s\\8x8\\*.bmp", dir );
 
     if( !( find = FindFirstFile( search_dir, &find_data ) ) ) {
         printf( "FindFirstFile failed.\n" );
@@ -122,14 +187,18 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
 
     do {
         if( !( find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) ) {
-            sprintf( file_path, ( type == IMG_16x16 ) ? "%s\\8x8\\%s" : "%s\\16x16\\%s", dir, find_data.cFileName );
+            sprintf( file_path, ( type == IMG_16x16 ) ? "%s\\16x16\\%s" : "%s\\8x8\\%s", dir, find_data.cFileName );
+
+			// Smestamo informacije o sprajtu u strukturu
+			strcpy(sprites[sprite_number].sprite_name, find_data.cFileName);
+			sprites[sprite_number].address = *base_addr;
 
             if( !( img = load_bitmap( file_path ) ) ) {
                 printf( "Failed to open: %s\n", file_path );
                 continue;
             }
 
-            sprintf( def_name, ( type == IMG_16x16 ) ? "IMG_8x8_%s" : "IMG_16x16_%s", find_data.cFileName );
+            sprintf( def_name, ( type == IMG_16x16 ) ? "IMG_16x16_%s" : "IMG_8x8_%s", find_data.cFileName );
 
             // Remove .bmp extension
             def_name[ strlen( def_name ) - 4 ] = '\0';
@@ -139,13 +208,35 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
             image_to_mem( mem_file, *base_addr, img, type, def_name );
 
             // Each image row gets split into 4 byte parts in order to fit memory size.
-            *base_addr += ( type == IMG_16x16 ) ? 8 * 2 : 16 * 4;
+            *base_addr += ( type == IMG_16x16 ) ? (16 * 4) : (8 * 2);
+
+			// Uvecavamo sprite_number kada smo pronasi novi sprite
+			sprite_number++;
 
             free( img );
         }
     } while( FindNextFile( find, &find_data ) );
 
     FindClose( find );
+}
+
+// Using 0-9, a-z and A-Z 
+void create_our_map() {
+	FILE *f;
+
+	if (!(f = fopen("bin\\empty_rally_map.map", "w"))) {
+		printf("Couldn't open 'empty_rally_map.map' file!\n");
+		return;
+	}
+
+	for (int i = 0; i < MAP_ROW_SIZE; i++) {
+		for (int j = 0; j < MAP_COL_SIZE - 1; j++) {
+			fprintf(f, "0");
+		}
+		fprintf(f, "0\n");
+	}
+
+	fclose(f);
 }
 
 void create_test_map( )
@@ -155,10 +246,12 @@ void create_test_map( )
     char            tmp;
     FILE *          f;
 
-    if( !( f = fopen( "bin\\mapa.map", "r" ) ) ) {
-        printf( "Couldn't open 'mapa.map' file!\n" );
+    if( !( f = fopen( "bin\\new_rally_map.map", "r" ) ) ) {
+        printf( "Couldn't open 'new_rally_map.map' file!\n" );
         return;
     }
+
+	// TODO: Popraviti funkciju
 
     x = 0;
 
@@ -196,49 +289,42 @@ void create_test_map( )
 
 void map_to_mem( FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned long * base_addr )
 {
-    unsigned int i, j = 0;
-
+	// For def.txt
     fprintf( def_file, "#define MAP_BASE_ADDRESS\t\t\t0x%.4X", *base_addr );
-    for( i = 0; i < NUM_MAP_ENTRIES; i++ ) {
 
-		//matrica[30][160]
+	// For map.vhdl
+	for (unsigned int i = 0; i < MAP_AREA_SIZE; i++) {
+		fprintf(mem_file, "\t\t%lu =>\tx\"%.2X%.2X%.4X\", -- z: %d rot: %d ptr: %d\n", *base_addr,
+			map[i].z,
+			map[i].rot,
+			map[i].ptr,
+			map[i].z,
+			map[i].rot,
+			map[i].ptr);
 
-		fprintf( hdr_file, "#ifndef _MAP_H_\n", *base_addr );
+		(*base_addr)++;
+	}
 
-        fprintf( hdr_file, "unsigned char  map1[30][160] = {\n" );
-
-		for( i = 0; i < NUM_MAP_ENTRIES; i++ ) {
-			//fprintf( mem_file, "%d\n", map[ i ].z );
-			fprintf( mem_file, "\t\t%lu =>\tx\"%.2X%.2X%.4X\", -- z: %d rot: %d ptr: %d\n", *base_addr,
-                                                                                         map[ i ].z,
-                                                                                         map[ i ].rot,
-                                                                                         map[ i ].ptr,
-                                                                                         map[ i ].z,
-                                                                                         map[ i ].rot,
-                                                                                         map[ i ].ptr );
-			if(j == 0)
-			{
-				fprintf( hdr_file, "{ " );
+	// For map.h
+	fprintf(hdr_file, "#ifndef _MAP_H_\n\n");
+	fprintf(hdr_file, "unsigned char map1[%d][%d] = {\n", MAP_ROW_SIZE, MAP_COL_SIZE);
+			
+	for (unsigned int i = 0; i < MAP_ROW_SIZE; i++) {
+		for (unsigned int j = 0; j < MAP_COL_SIZE; j++) {
+			if (j == 0) {
+				fprintf(hdr_file, "{ %d, ", map[i * j + j].z);
 			}
-			fprintf( hdr_file, ( i == NUM_MAP_ENTRIES - 1 ) ? "%d, "
-															: "%d, ", map[ i ].z);
-			if(j >= 159)
-				fprintf( hdr_file, "\n{ " );
+			else if ((j > 0) && (j < MAP_COL_SIZE - 1)) {
+				fprintf(hdr_file, "%d, ", map[i * j + j].z);
 			}
-			fprintf( hdr_file, ( i == NUM_MAP_ENTRIES - 1 ) ? "%d, "
-															: "%d, ", map[ i ].z);
-			if(j >= 79)
-			{
-				fprintf( hdr_file, " },\n");
-				j = 0;
+			else if ((j == MAP_COL_SIZE - 1) && (i == MAP_ROW_SIZE - 1)) {
+				fprintf(hdr_file, "%d}\n", map[i * j + j].z);
 			}
-			else
-			{
-				j++;
+			else if (j == MAP_COL_SIZE - 1){
+				fprintf(hdr_file, "%d},\n", map[i * j + j].z);
 			}
-
-			*base_addr += 1;
 		}
+	}
 
-		fprintf( hdr_file, "\n};\n" );
+	fprintf(hdr_file, "}\n");
 }
