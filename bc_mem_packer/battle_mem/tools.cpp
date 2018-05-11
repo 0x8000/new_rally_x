@@ -189,6 +189,7 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
         if( !( find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) ) {
             sprintf( file_path, ( type == IMG_16x16 ) ? "%s\\16x16\\%s" : "%s\\8x8\\%s", dir, find_data.cFileName );
 
+			// Smestamo informacije o sprajtu u strukturu
 			strcpy(sprites[sprite_number].sprite_name, find_data.cFileName);
 			sprites[sprite_number].address = *base_addr;
 
@@ -245,8 +246,8 @@ void create_test_map( )
     char            tmp;
     FILE *          f;
 
-    if( !( f = fopen( "bin\\mapa.map", "r" ) ) ) {
-        printf( "Couldn't open 'mapa.map' file!\n" );
+    if( !( f = fopen( "bin\\new_rally_map.map", "r" ) ) ) {
+        printf( "Couldn't open 'new_rally_map.map' file!\n" );
         return;
     }
 
