@@ -251,6 +251,8 @@ void create_test_map( )
         return;
     }
 
+	// TODO: Popraviti funkciju
+
     x = 0;
 
     while( ( tmp = fgetc( f ) ) != EOF ) {
@@ -300,7 +302,7 @@ void map_to_mem( FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned lon
 			map[i].rot,
 			map[i].ptr);
 
-		*base_addr++;
+		(*base_addr)++;
 	}
 
 	// For map.h

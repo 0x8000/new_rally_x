@@ -1,13 +1,12 @@
-﻿  main.cpp
-  Generating Code...
-  Compiling...
-  tools.cpp
+﻿  tools.cpp
 d:\materija\ra218-2015\new_rally_x\bc_mem_packer\battle_mem\tools.cpp(16): warning C4018: '<': signed/unsigned mismatch
 d:\materija\ra218-2015\new_rally_x\bc_mem_packer\battle_mem\tools.cpp(22): warning C4018: '<': signed/unsigned mismatch
 d:\materija\ra218-2015\new_rally_x\bc_mem_packer\battle_mem\tools.cpp(44): warning C4018: '<': signed/unsigned mismatch
 d:\materija\ra218-2015\new_rally_x\bc_mem_packer\battle_mem\tools.cpp(36): warning C4101: 'mask': unreferenced local variable
 d:\materija\ra218-2015\new_rally_x\bc_mem_packer\battle_mem\tools.cpp(37): warning C4101: 'bit': unreferenced local variable
 d:\materija\ra218-2015\new_rally_x\bc_mem_packer\battle_mem\tools.cpp(245): warning C4101: 'y': unreferenced local variable
+  main.cpp
+  bitmap.cpp
   Generating Code...
   battle_mem.vcxproj -> D:\materija\RA218-2015\new_rally_x\bc_mem_packer\battle_mem\Debug\battle_mem.exe
   battle_mem.vcxproj -> D:\materija\RA218-2015\new_rally_x\bc_mem_packer\battle_mem\Debug\battle_mem.pdb (Full PDB)
