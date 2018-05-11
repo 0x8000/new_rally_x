@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #define COLOR_PALLETE_BASE_ADDR 0x0000
 #define IMAGE_8x8_BASE_ADDR     0x00FF

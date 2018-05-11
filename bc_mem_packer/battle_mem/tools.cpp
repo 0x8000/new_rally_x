@@ -241,48 +241,28 @@ void create_our_map() {
 
 void create_test_map( )
 {
-    unsigned int    x;
-    unsigned int    y;
-    char            tmp;
-    FILE *          f;
+    FILE *f;
 
     if( !( f = fopen( "bin\\new_rally_map.map", "r" ) ) ) {
         printf( "Couldn't open 'new_rally_map.map' file!\n" );
         return;
     }
 
-	// TODO: Popraviti funkciju
-
-    x = 0;
-
-    while( ( tmp = fgetc( f ) ) != EOF ) {
-        if( tmp >= '0' && tmp <= '9' ) {
-            map[ x ].rot = 0;
-			
-            if( tmp == '0' ) {
-                map[ x ].z = 0;
-                map[ x++ ].ptr = 0x017F; // crno
-            } else if( tmp == '1' ) {
-                map[ x ].z = 1;
-				map[ x++ ].ptr = 0x01FF; // mario
-            } else if( tmp == '2' ) {
-                map[ x ].z = 2; 
-				map[ x++ ].ptr = 0x00FF; // cigla
-            } else if( tmp == '3' ) {
-                map[ x ].z = 3;
-				map[ x++ ].ptr = 0x023F; // plava cigla
-            } else if( tmp == '4' ) {
-                map[ x ].z = 4; 
-				map[ x++ ].ptr = 0x01BF; // enemi
-            } else if( tmp == '5' ) {
-                map[ x ].z = 5;
-				map[ x++ ].ptr = 0x013F; // coin
-			}else{
-				 map[ x ].z = 0;
-				 map[ x++ ].ptr = 0x0000; // null
+	char block;
+	unsigned int x = 0;
+	while ((block = fgetc(f)) != EOF) {
+		if (isalnum(block)) {
+			map[x].rot = 0;
+			for (int i = 0; i < NUMBER_OF_SPRITES; i++) {
+				if (block == sprites[i].id) {
+					map[x].z = 0;
+					map[x].ptr = sprites[i].address;
+					break;
+				}
 			}
-        }
-    }
+		}
+		x++;
+	}
 
     fclose( f );
 }

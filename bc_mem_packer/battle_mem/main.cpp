@@ -81,7 +81,7 @@ int main( )
 
 	merge_names_and_ids();
 
-    //create_test_map( );
+    create_test_map( );
     map_to_mem( mem_file, def_file, hdr_file, &base_addr );
 
     fprintf( hdr_file, "\n#endif // _MAP_H_\n" );
