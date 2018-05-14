@@ -288,7 +288,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	int obstackle = 0;
 
 	if(dir == DIR_RIGHT){
-		mario->x++;
+		mario->x+=3;
 	}
 	x = mario->x;
 	y = mario->y;
@@ -298,7 +298,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, offset_x);
 
 	if(dir == DIR_LEFT){
-			mario->x--;
+			mario->x-=3;
 		}
 		x = mario->x;
 		y = mario->y;
@@ -308,7 +308,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, offset_x);
 
 	if(dir == DIR_UP){
-			mario->y--;
+			mario->y-=3;
 		}
 		x = mario->x;
 		y = mario->y;
@@ -317,7 +317,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 
 		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET, offset_y);
 	if(dir == DIR_DOWN){
-			mario->y++;
+			mario->y+=3;
 		}
 		x = mario->x;
 		y = mario->y;
