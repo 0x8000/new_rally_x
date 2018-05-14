@@ -62,7 +62,7 @@ int main( )
 
 	num_colors = 1;
 
-	base_addr = IMAGE_8x8_BASE_ADDR;
+	base_addr = IMAGE_16x16_BASE_ADDR;
 /*
     fprintf( mem_file, "\n\n--\t\t\t***** 8x8 IMAGES *****\n\n\n" );
     fprintf( def_file, "\n\n// ***** 8x8 IMAGES *****\n\n" );
@@ -77,7 +77,10 @@ int main( )
     fprintf( mem_file, "\n\n--\t\t\t***** MAP *****\n\n\n" );
     fprintf( def_file, "\n\n// ***** MAP *****\n\n" );
 
-	create_our_map();
+	/* Create basic map with given size */
+	//create_our_map();
+
+	// TODO: Imena fajlova zadavati preko argumenata komande linije
 
 	merge_names_and_ids();
 

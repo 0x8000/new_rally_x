@@ -10,7 +10,7 @@ void colors_to_mem( FILE * f, unsigned long addr )
 {
     unsigned int i;
 
-    for( i = 0; i < 255; i++ ) {
+    for( i = 0; i < 256; i++ ) {
         fprintf( f, "\t\t%lu =>\tx\"", addr );
 
         if( i < num_colors ) {
@@ -110,8 +110,8 @@ void merge_names_and_ids() {
 	char file_name[NUMBER_OF_SPRITES][LINE_SIZE];
 	char id[NUMBER_OF_SPRITES];
 
-	if (!(f = fopen("bin\\connect_id_with_name.txt", "r"))) {
-		printf("Couldn't open 'connect_id_with_name.txt' file!\n");
+	if (!(f = fopen("bin\\sprajtovi.txt", "r"))) {
+		printf("Couldn't open 'sprajtovi.txt' file!\n");
 		return;
 	}
 

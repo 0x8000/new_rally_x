@@ -12,6 +12,7 @@
 
 #define COLOR_PALLETE_BASE_ADDR 0x0000
 #define IMAGE_8x8_BASE_ADDR     0x00FF
+#define IMAGE_16x16_BASE_ADDR     0x0100
 
 #define MAP_ROW_SIZE 80
 #define MAP_COL_SIZE 100
@@ -19,7 +20,7 @@
 
 #define NUM_MAP_ENTRIES         ( 160 * 30 )
 
-#define NUMBER_OF_SPRITES 9
+#define NUMBER_OF_SPRITES (32 + 1)
 #define LINE_SIZE 50
 
 typedef enum {
