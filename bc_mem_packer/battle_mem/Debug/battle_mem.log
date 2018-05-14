@@ -5,7 +5,5 @@ d:\materija\ra218-2015\14-5-2018\new_rally_x\bc_mem_packer\battle_mem\tools.cpp(
 d:\materija\ra218-2015\14-5-2018\new_rally_x\bc_mem_packer\battle_mem\tools.cpp(36): warning C4101: 'mask': unreferenced local variable
 d:\materija\ra218-2015\14-5-2018\new_rally_x\bc_mem_packer\battle_mem\tools.cpp(37): warning C4101: 'bit': unreferenced local variable
 d:\materija\ra218-2015\14-5-2018\new_rally_x\bc_mem_packer\battle_mem\tools.cpp(259): warning C4244: '=': conversion from 'unsigned long' to 'unsigned short', possible loss of data
-  main.cpp
-  Generating Code...
   battle_mem.vcxproj -> D:\materija\RA218-2015\14-5-2018\new_rally_x\bc_mem_packer\battle_mem\Debug\battle_mem.exe
   battle_mem.vcxproj -> D:\materija\RA218-2015\14-5-2018\new_rally_x\bc_mem_packer\battle_mem\Debug\battle_mem.pdb (Full PDB)

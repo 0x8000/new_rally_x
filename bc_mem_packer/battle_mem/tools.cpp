@@ -260,8 +260,8 @@ void create_test_map( )
 					break;
 				}
 			}
+			x++;
 		}
-		x++;
 	}
 
     fclose( f );
