@@ -110,7 +110,7 @@ void merge_names_and_ids() {
 	char file_name[NUMBER_OF_SPRITES][LINE_SIZE];
 	char id[NUMBER_OF_SPRITES];
 
-	if (!(f = fopen("bin\\sprajtovi.txt", "r"))) {
+	if (!(f = fopen("graphicStuff\\sprajtovi.txt", "r"))) {
 		printf("Couldn't open 'sprajtovi.txt' file!\n");
 		return;
 	}
@@ -224,7 +224,7 @@ void process_images( const char * dir, FILE * mem_file, FILE * def_file, unsigne
 void create_our_map() {
 	FILE *f;
 
-	if (!(f = fopen("bin\\empty_rally_map.map", "w"))) {
+	if (!(f = fopen("graphicStuff\\empty_rally_map.map", "w"))) {
 		printf("Couldn't open 'empty_rally_map.map' file!\n");
 		return;
 	}
@@ -243,7 +243,7 @@ void create_test_map( )
 {
     FILE *f;
 
-    if( !( f = fopen( "bin\\new_rally_map.map", "r" ) ) ) {
+    if( !( f = fopen( "graphicStuff\\new_rally_map.map", "r" ) ) ) {
         printf( "Couldn't open 'new_rally_map.map' file!\n" );
         return;
     }

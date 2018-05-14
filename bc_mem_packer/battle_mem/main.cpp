@@ -17,7 +17,7 @@ int main( )
         printf( "Cannot get current directory.\n" );
         return 1;
     }
-	strcpy(dir+strlen(dir), "\\bin");
+	strcpy(dir+strlen(dir), "\\graphicStuff");
 	printf("Current directory: %s\n", dir);
 
     sprintf( file_path, "%s\\mem.txt", dir );
