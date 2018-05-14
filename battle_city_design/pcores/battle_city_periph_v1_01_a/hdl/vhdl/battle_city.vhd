@@ -65,7 +65,7 @@ architecture Behavioral of battle_city is
    -- Globals --
    signal registers_s      : registers_t :=                                -- Array representing registers 
    --   row   |    col  |en&size|  rot  | pointer
-   (( x"0130" & x"00e3" & x"7f" & x"00" & x"01FF" ),  --mario
+   (( x"0130" & x"00e3" & x"7f" & x"00" & x"0140" ),  --formulko
     ( x"0170" & x"00d5" & x"7f" & x"00" & x"01BF" ),  --enemie
     ( x"0170" & x"011b" & x"7f" & x"00" & x"01BF" ),
     ( x"0170" & x"014d" & x"7f" & x"00" & x"01BF" ),
