@@ -35,6 +35,7 @@ typedef struct {
 } color_t;
 
 typedef struct {
+	unsigned char id;
 	unsigned char   z;
 	unsigned char   rot;
 	unsigned short  ptr;
