@@ -247,8 +247,8 @@ void create_test_map()
 {
 	FILE *f;
 
-	if (!(f = fopen("graphicStuff\\all_sprites_map.map", "r"))) {
-		printf("Couldn't open 'all_sprites_map.map' file!\n");
+	if (!(f = fopen("graphicStuff\\mapa_za_sw.map", "r"))) {
+		printf("Couldn't open 'mapa_za_sw.map' file!\n");
 		return;
 	}
 
@@ -259,7 +259,7 @@ void create_test_map()
 			map[x].rot = 0;
 			for (int i = 0; i < NUMBER_OF_SPRITES; i++) {
 				if (block == sprites[i].id) {
-					map[x].z = 0;
+					map[x].z = sprites[i].id;  // id
 					map[x].ptr = sprites[i].address;
 					
 					x++;
@@ -298,16 +298,16 @@ void map_to_mem(FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned long
 	for (unsigned int i = 0; i < MAP_ROW_SIZE; i++) {
 		for (unsigned int j = 0; j < MAP_COL_SIZE; j++) {
 			if (j == 0) {
-				fprintf(hdr_file, "{ %d, ", map[i * j + j].z);
+				fprintf(hdr_file, "{ '%c', ", map[i * j + j].z);
 			}
 			else if ((j > 0) && (j < MAP_COL_SIZE - 1)) {
-				fprintf(hdr_file, "%d, ", map[i * j + j].z);
+				fprintf(hdr_file, "'%c', ", map[i * j + j].z);
 			}
 			else if ((j == MAP_COL_SIZE - 1) && (i == MAP_ROW_SIZE - 1)) {
-				fprintf(hdr_file, "%d}\n", map[i * j + j].z);
+				fprintf(hdr_file, "'%c'}\n", map[i * j + j].z);
 			}
 			else if (j == MAP_COL_SIZE - 1) {
-				fprintf(hdr_file, "%d},\n", map[i * j + j].z);
+				fprintf(hdr_file, "'%c'},\n", map[i * j + j].z);
 			}
 		}
 	}
