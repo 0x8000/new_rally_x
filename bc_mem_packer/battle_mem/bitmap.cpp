@@ -12,6 +12,8 @@
 	Free allocated memory!
 */
 
+// TODO: Napraviti da se color depth prevede na 24bit
+
 unsigned char * load_bitmap(const char * file)
 {
 	FILE *                  f;

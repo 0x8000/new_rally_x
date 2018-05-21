@@ -13,8 +13,8 @@
 #define IMAGE_8x8_BASE_ADDR     0x00FF
 #define IMAGE_16x16_BASE_ADDR     0x0100
 
-#define MAP_ROW_SIZE 80
-#define MAP_COL_SIZE 100
+#define MAP_ROW_SIZE (30 + 1)
+#define MAP_COL_SIZE (40 + 1)
 #define MAP_AREA_SIZE (MAP_ROW_SIZE * MAP_COL_SIZE)
 
 #define NUM_MAP_ENTRIES         ( 160 * 30 )
