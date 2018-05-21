@@ -79,7 +79,7 @@ int main()
 	fprintf(def_file, "\n\n// ***** MAP *****\n\n");
 
 	/* Create basic map with given size */
-	//create_our_map();
+	create_our_map();
 
 	// TODO: Imena fajlova zadavati preko argumenata komande linije
 

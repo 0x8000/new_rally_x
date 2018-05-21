@@ -247,8 +247,8 @@ void create_test_map()
 {
 	FILE *f;
 
-	if (!(f = fopen("graphicStuff\\new_rally_map.map", "r"))) {
-		printf("Couldn't open 'new_rally_map.map' file!\n");
+	if (!(f = fopen("graphicStuff\\empty_rally_map.map", "r"))) {
+		printf("Couldn't open 'empty_rally_map.map' file!\n");
 		return;
 	}
 
@@ -261,10 +261,12 @@ void create_test_map()
 				if (block == sprites[i].id) {
 					map[x].z = 0;
 					map[x].ptr = sprites[i].address;
+					
+					x++;
+					
 					break;
 				}
 			}
-			x++;
 		}
 	}
 
