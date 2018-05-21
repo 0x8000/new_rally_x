@@ -247,8 +247,8 @@ void create_test_map()
 {
 	FILE *f;
 
-	if (!(f = fopen("graphicStuff\\empty_rally_map.map", "r"))) {
-		printf("Couldn't open 'empty_rally_map.map' file!\n");
+	if (!(f = fopen("graphicStuff\\all_sprites_map.map", "r"))) {
+		printf("Couldn't open 'all_sprites_map.map' file!\n");
 		return;
 	}
 
