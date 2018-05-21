@@ -312,5 +312,5 @@ void map_to_mem(FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned long
 		}
 	}
 
-	fprintf(hdr_file, "}\n");
+	fprintf(hdr_file, "};\n");
 }
