@@ -20,7 +20,7 @@
 #define NUM_MAP_ENTRIES         ( 160 * 30 )
 
 // TODO: Broj sprajtova saznati u programu i dinamicki zauzeti memoriju
-#define NUMBER_OF_SPRITES (32 + 1)
+#define NUMBER_OF_SPRITES (33 + 1)
 #define LINE_SIZE 50
 
 typedef enum {
