@@ -228,8 +228,8 @@ void process_images(const char * dir, FILE * mem_file, FILE * def_file, unsigned
 void create_our_map() {
 	FILE *f;
 
-	if (!(f = fopen("graphicStuff\\empty_rally_map_31x41.map", "w"))) {
-		printf("Couldn't open 'empty_rally_map.map' file!\n");
+	if (!(f = fopen("graphicStuff\\empty_testing.map", "w"))) {
+		printf("Couldn't open 'empty_testing.map' file!\n");
 		return;
 	}
 
@@ -293,23 +293,30 @@ void map_to_mem(FILE * mem_file, FILE * def_file, FILE * hdr_file, unsigned long
 	}
 
 	// For map.h
-	fprintf(hdr_file, "#ifndef _MAP_H_\n\n");
+	fprintf(hdr_file, "#ifndef _MAP_H_\n");
+	fprintf(hdr_file, "#define _MAP_H_\n\n");
 	fprintf(hdr_file, "unsigned char map1[%d][%d] = {\n", MAP_ROW_SIZE, MAP_COL_SIZE);
 
-	for (unsigned int i = 0; i < MAP_ROW_SIZE; i++) {
-		for (unsigned int j = 0; j < MAP_COL_SIZE; j++) {
-			if (j == 0) {
-				fprintf(hdr_file, "{ '%c', ", map[i * j + j].id);
-			}
-			else if ((j > 0) && (j < MAP_COL_SIZE - 1)) {
-				fprintf(hdr_file, "'%c', ", map[i * j + j].id);
-			}
-			else if ((j == MAP_COL_SIZE - 1) && (i == MAP_ROW_SIZE - 1)) {
-				fprintf(hdr_file, "'%c'}\n", map[i * j + j].id);
-			}
-			else if (j == MAP_COL_SIZE - 1) {
-				fprintf(hdr_file, "'%c'},\n", map[i * j + j].id);
-			}
+	unsigned int j = 0;
+	for (unsigned int i = 0; i < MAP_AREA_SIZE; i++) {
+		if (j == 0) {
+			fprintf(hdr_file, "{ '%c', ", map[i].id);
+		}
+		else if (j > 0 && j < MAP_COL_SIZE - 1) {
+			fprintf(hdr_file, "'%c', ", map[i].id);
+		}
+		else if (j == MAP_COL_SIZE - 1 && i != MAP_AREA_SIZE) {
+			fprintf(hdr_file, "'%c'},\n", map[i].id);
+		}
+		else if (i == MAP_AREA_SIZE) {
+			fprintf(hdr_file, "'%c'}\n", map[i].id);
+		}
+
+		if (j == MAP_COL_SIZE - 1) {
+			j = 0;
+		}
+		else {
+			j++;
 		}
 	}
 
