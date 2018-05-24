@@ -228,7 +228,7 @@ void process_images(const char * dir, FILE * mem_file, FILE * def_file, unsigned
 void create_our_map() {
 	FILE *f;
 
-	if (!(f = fopen("graphicStuff\\empty_rally_map.map", "w"))) {
+	if (!(f = fopen("graphicStuff\\empty_rally_map_31x41.map", "w"))) {
 		printf("Couldn't open 'empty_rally_map.map' file!\n");
 		return;
 	}
@@ -247,8 +247,8 @@ void create_test_map()
 {
 	FILE *f;
 
-	if (!(f = fopen("graphicStuff\\mapa_za_sw.map", "r"))) {
-		printf("Couldn't open 'mapa_za_sw.map' file!\n");
+	if (!(f = fopen("graphicStuff\\mapa_za_sw_custom.map", "r"))) {
+		printf("Couldn't open 'mapa_za_sw_custom.map' file!\n");
 		return;
 	}
 

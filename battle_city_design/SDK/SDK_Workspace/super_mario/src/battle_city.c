@@ -11,15 +11,43 @@
  */
 
 // ***** 16x16 IMAGES *****
-#define IMG_16x16_cigle			0x00FF //2
-#define IMG_16x16_coin			0x013F //5
-#define IMG_16x16_crno			0x017F //0
-#define IMG_16x16_enemi1		0x01BF //4
-#define IMG_16x16_mario			0x01FF //1
-#define IMG_16x16_plavacigla	0x023F //3
+#define IMG_16x16_background			    0x0100  //0
+#define IMG_16x16_bang			            0x0140  //1
+#define IMG_16x16_car_blue			        0x0180  //2
+#define IMG_16x16_car_red			        0x01C0  //3
+#define IMG_16x16_flag			            0x0200  //4
+#define IMG_16x16_map_element_00			0x0240  //5
+#define IMG_16x16_map_element_01			0x0280  //6
+#define IMG_16x16_map_element_02			0x02C0  //7
+#define IMG_16x16_map_element_03			0x0300  //8
+#define IMG_16x16_map_element_04			0x0340  //9
+#define IMG_16x16_map_element_05			0x0380  //a
+#define IMG_16x16_map_element_06			0x03C0  //b
+#define IMG_16x16_map_element_07			0x0400  //c
+#define IMG_16x16_map_element_08			0x0440  //d
+#define IMG_16x16_map_element_09			0x0480  //e
+#define IMG_16x16_map_element_10			0x04C0  //f
+#define IMG_16x16_map_element_11			0x0500  //g
+#define IMG_16x16_map_element_12			0x0540  //h
+#define IMG_16x16_map_element_13			0x0580  //i
+#define IMG_16x16_map_element_14			0x05C0  //j
+#define IMG_16x16_map_element_15			0x0600  //k
+#define IMG_16x16_map_element_16			0x0640  //l
+#define IMG_16x16_map_element_17			0x0680  //m
+#define IMG_16x16_map_element_18			0x06C0  //n
+#define IMG_16x16_map_element_19			0x0700  //o
+#define IMG_16x16_map_element_20			0x0740  //p
+#define IMG_16x16_map_element_21			0x0780  //q
+#define IMG_16x16_map_element_22			0x07C0  //r
+#define IMG_16x16_map_element_23			0x0800  //s
+#define IMG_16x16_map_element_24			0x0840  //t
+#define IMG_16x16_map_element_25			0x0880  //u
+#define IMG_16x16_rock			            0x08C0  //v
+#define IMG_16x16_smoke			            0x0900  //w
+
 // ***** MAP *****
 
-#define MAP_BASE_ADDRESS			639 // MAP_OFFSET in battle_city.vhd
+#define MAP_BASE_ADDRESS			    2368  // MAP_OFFSET in battle_city.vhd
 #define MAP_X							0
 #define MAP_X2							640
 #define MAP_Y							4
@@ -95,7 +123,7 @@ characters mario = {
 		320,	                          // x
 		240, 		                     // y
 		DIR_RIGHT,              		// dir
-		IMG_16x16_mario,  			// type
+		IMG_16x16_car_blue,  			// type
 
 		b_false,                		// destroyed
 
@@ -106,14 +134,14 @@ characters mario = {
 characters enemie1 = { 331,						// x
 		431,						// y
 		DIR_LEFT,              		// dir
-		IMG_16x16_enemi1,  		// type
+		IMG_16x16_car_red,  		// type
 
 		b_false,                		// destroyed
 
 		TANK_AI_REG_L,            		// reg_l
 		TANK_AI_REG_H             		// reg_h
 		};
-
+/*
 characters enemie2 = { 450,						// x
 		431,						// y
 		DIR_LEFT,              		// dir
@@ -146,6 +174,9 @@ characters enemie4 = { 635,						// x
 		TANK_AI_REG_L4,            		// reg_l
 		TANK_AI_REG_H4             		// reg_h
 		};
+*/
+
+
 
 unsigned int rand_lfsr113(void) {
 	static unsigned int z1 = 12345, z2 = 12345;
@@ -223,36 +254,118 @@ static void map_update(characters * mario) {
 	int z,w;
 
 	for (y = 0; y < MAP_HEIGHT; y++) {
-		for (x = 0; x < MAP_WIDTH; x++) {
-			addr = XPAR_BATTLE_CITY_PERIPH_0_BASEADDR
-					+ 4 * (MAP_BASE_ADDRESS + y * MAP_WIDTH + x);
-			switch (map1[(roundY-15)+y][(roundX-20)+x]) {
-			//switch (map1[y][x]) {
-			case 0:
-				Xil_Out32(addr, IMG_16x16_crno);
-				break;
-			case 1:
-				Xil_Out32(addr, IMG_16x16_mario);
-				break;
-			case 2:
-				Xil_Out32(addr, IMG_16x16_cigle);
-				break;
-			case 3:
-				Xil_Out32(addr, IMG_16x16_plavacigla);
-				break;
-			case 4:
-				Xil_Out32(addr, IMG_16x16_enemi1);
-				break;
-			case 5:
-				Xil_Out32(addr, IMG_16x16_coin);
-				break;
-			default:
-				Xil_Out32(addr, IMG_16x16_crno);
-				break;
-			}
-		}
+			for (x = 0; x < MAP_WIDTH; x++) {
+				addr = XPAR_BATTLE_CITY_PERIPH_0_BASEADDR
+						+ 4 * (MAP_BASE_ADDRESS + y * MAP_WIDTH + x);
+				switch (map1[(roundY-15)+y][(roundX-20)+x]) {
+				//switch (map1[y][x]) {
+				case '0':
+					Xil_Out32(addr, IMG_16x16_background);
+					break;
+				case '1':
+					Xil_Out32(addr, IMG_16x16_bang);
+					break;
+				case '2':
+					Xil_Out32(addr, IMG_16x16_car_blue);
+					break;
+				case '3':
+					Xil_Out32(addr, IMG_16x16_car_red);
+					break;
+				case '4':
+					Xil_Out32(addr, IMG_16x16_flag);
+					break;
+				case '5':
+					Xil_Out32(addr, IMG_16x16_map_element_00);
+					break;
+				case '6':
+					Xil_Out32(addr, IMG_16x16_map_element_01);
+					break;
+				case '7':
+					Xil_Out32(addr, IMG_16x16_map_element_02);
+					break;
+				case '8':
+					Xil_Out32(addr, IMG_16x16_map_element_03);
+					break;
+				case '9':
+					Xil_Out32(addr, IMG_16x16_map_element_04);
+					break;
+				case 'a':
+					Xil_Out32(addr, IMG_16x16_map_element_05);
+					break;
+				case 'b':
+					Xil_Out32(addr, IMG_16x16_map_element_06);
+					break;
+				case 'c':
+					Xil_Out32(addr, IMG_16x16_map_element_07);
+					break;
+				case 'd':
+					Xil_Out32(addr, IMG_16x16_map_element_08);
+					break;
+				case 'e':
+					Xil_Out32(addr, IMG_16x16_map_element_09);
+					break;
+				case 'f':
+					Xil_Out32(addr, IMG_16x16_map_element_10);
+					break;
+				case 'g':
+					Xil_Out32(addr, IMG_16x16_map_element_11);
+					break;
+				case 'h':
+					Xil_Out32(addr, IMG_16x16_map_element_12);
+					break;
+				case 'i':
+					Xil_Out32(addr, IMG_16x16_map_element_13);
+					break;
+				case 'j':
+					Xil_Out32(addr, IMG_16x16_map_element_14);
+					break;
+				case 'k':
+					Xil_Out32(addr, IMG_16x16_map_element_15);
+					break;
+				case 'l':
+					Xil_Out32(addr, IMG_16x16_map_element_16);
+					break;
+				case 'm':
+					Xil_Out32(addr, IMG_16x16_map_element_17);
+					break;
+				case 'n':
+					Xil_Out32(addr, IMG_16x16_map_element_18);
+					break;
+				case 'o':
+					Xil_Out32(addr, IMG_16x16_map_element_19);
+					break;
+				case 'p':
+					Xil_Out32(addr, IMG_16x16_map_element_20);
+					break;
+				case 'q':
+					Xil_Out32(addr, IMG_16x16_map_element_21);
+					break;
+				case 'r':
+					Xil_Out32(addr, IMG_16x16_map_element_22);
+					break;
+				case 's':
+					Xil_Out32(addr, IMG_16x16_map_element_23);
+					break;
+				case 't':
+					Xil_Out32(addr, IMG_16x16_map_element_24);
+					break;
+				case 'u':
+					Xil_Out32(addr, IMG_16x16_map_element_25);
+					break;
+				case 'v':
+					Xil_Out32(addr,IMG_16x16_rock );
+					break;
+				case 'w':
+					Xil_Out32(addr, IMG_16x16_smoke);
+					break;
 
-	}
+				default:
+					Xil_Out32(addr, IMG_16x16_background);
+					break;
+				}
+			}
+
+		}
 
 
 }
