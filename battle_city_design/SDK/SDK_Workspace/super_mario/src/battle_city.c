@@ -13,7 +13,7 @@
 // ***** 16x16 IMAGES *****
 #define IMG_16x16_background			    0x0100  //0
 #define IMG_16x16_bang			            0x0140  //1
-#define IMG_16x16_car_blue			        0x0180  //2
+#define IMG_16x16_car_blue			         0x0180  //2
 #define IMG_16x16_car_red			        0x01C0  //3
 #define IMG_16x16_flag			            0x0200  //4
 #define IMG_16x16_map_element_00			0x0240  //5
@@ -386,7 +386,7 @@ void update_car_position(characters * car) {
 	if (car->object_in_the_path == 1) {
 		switch (car->dir) {
 		case DIR_RIGHT:
-			car->x += 3;
+			car->x += 1;
 			offset_x = car->x & 0xf; // % 16
 
 			Xil_Out32(
@@ -396,7 +396,7 @@ void update_car_position(characters * car) {
 			break;
 
 		case DIR_LEFT:
-			car->x -= 3;
+			car->x -= 1;
 			offset_x = car->x & 0xf; // % 16
 
 			Xil_Out32(
@@ -405,7 +405,7 @@ void update_car_position(characters * car) {
 
 			break;
 		case DIR_UP:
-			car->y -= 3;
+			car->y -= 1;
 			offset_y = car->y & 0xf; // % 16
 
 			Xil_Out32(
@@ -414,7 +414,7 @@ void update_car_position(characters * car) {
 
 			break;
 		case DIR_DOWN:
-			car->y += 3;
+			car->y += 1;
 			offset_y = car->y & 0xf; // % 16
 
 			Xil_Out32(
@@ -627,21 +627,71 @@ void update_car_position(characters * car) {
  return b_false;
  }*/
 
+int provera( int x, int y){
+
+
+	float fx = x;
+	float fy = y;
+
+	u8 roundX = x >> 4;
+	u8 roundY = y >> 4;
+	if(map1[roundY][roundX]=='0')
+		return 1;
+	else return 0;
+}
+
+int detekcija_okoline(characters *car) {
+
+	if (car->dir == DIR_RIGHT) {
+		if (provera(car->x + 13, car->y+2) == 1
+				&& (provera(car->x + 13, car->y + 13) == 1)) {
+			car->object_in_the_path = 1;
+			//moze da se pomeri
+		}
+	}
+	if (car->dir == DIR_LEFT) {
+		if (provera(car->x - 1, car->y+1) == 1
+				&& (provera(car->x - 1, car->y + 13) == 1)) {
+			car->object_in_the_path = 1;
+			//moze da se pomeri
+		}
+	}
+	if (car->dir == DIR_UP) {
+		if (provera(car->x+1, car->y - 1) == 1
+				&& (provera(car->x + 13, car->y - 1) == 1)) {
+			car->object_in_the_path = 1;
+			//moze da se pomeri
+		}
+	}
+	if (car->dir == DIR_DOWN) {
+		if (provera(car->x+1, car->y + 13) == 1
+				&& (provera(car->x + 13, car->y + 13) == 1)) {
+			car->object_in_the_path = 1;
+			//moze da se pomeri
+		}
+	}
+}
+
 int obstackles_detection(characters *car) {
 	float fx = car->x;
 	float fy = car->y;
-
+	/*
 	int roundX = 0;
 	int roundY = 0;
 
-	roundX = floor(fx / 16);
-	roundY = floor(fy / 16);
+
+	roundX = (int)(fx / 16);
+	roundY = (int)(fy / 16);
+	*/
+
+	u8 roundX = (car->x) >> 4;
+	u8 roundY = (car->y) >> 4;
 
 	int next_1 = 0;
 	int next_2 = 0;
 
 	if (car->dir == DIR_RIGHT) {
-		switch (map1[roundY][roundX + 1]) {
+		switch (map1[roundY+1][roundX + 1]) {
 		case '0':
 			next_1 = 1;
 			break;
@@ -664,20 +714,20 @@ int obstackles_detection(characters *car) {
 			break;
 		}
 	}
-	if (next_1 != 0 && next_2 !=0 ) {
+	if (next_1 != 0 ) {
 		car->object_in_the_path = 1;
 
 	} else
 		car->object_in_the_path = 0;
 
 	if (car->dir == DIR_LEFT) {
-		switch (map1[roundY][roundX - 1]) {
+		switch (map1[roundY + 1][roundX]) {
 		case '0':
 			next_1 = 1;
 			break;
-		case '4':
+		/*case '4':
 			next_1 = 2;
-			break;
+			break;*/
 		default:
 			next_1 = 0;
 			break;
@@ -686,28 +736,28 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_2 = 1;
 			break;
-		case '4':
+		/*case '4':
 			next_2 = 2;
-			break;
+			break;*/
 		default:
 			next_2 = 0;
 			break;
 		}
 	}
-	if (next_1 != 0 && next_2 !=0) {
+	if (next_1 != 0) {
 		car->object_in_the_path = 1;
 
 	} else
 		car->object_in_the_path = 0;
 
 	if (car->dir == DIR_UP) {
-		switch (map1[roundY - 1][roundX]) {
+		switch (map1[roundY ][roundX]) {
 		case '0':
 			next_1 = 1;
 			break;
-		case '4':
+		/*case '4':
 			next_1 = 2;
-			break;
+			break;*/
 		default:
 			next_1 = 0;
 			break;
@@ -716,15 +766,15 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_2 = 1;
 			break;
-		case '4':
+		/*case '4':
 			next_2 = 1;
-			break;
+			break;*/
 		default:
 			next_2 = 0;
 			break;
 		}
 	}
-	if (next_1 != 0 && next_2 !=0) {
+	if (next_1 != 0 ) {
 		car->object_in_the_path = 1;
 
 	} else
@@ -735,9 +785,9 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_1 = 1;
 			break;
-		case '4':
+		/*case '4':
 			next_1 = 2;
-			break;
+			break;*/
 		default:
 			next_1 = 0;
 			break;
@@ -746,15 +796,15 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_2 = 1;
 			break;
-		case '4':
+		/*case '4':
 			next_2 = 2;
-			break;
+			break;*/
 		default:
 			next_2 = 0;
 			break;
 		}
 	}
-	if (next_1 != 0 && next_2 !=0) {
+	if (next_1 != 0 ) {
 		car->object_in_the_path = 1;
 
 	} else
@@ -860,6 +910,8 @@ void battle_city() {
 	int i, change = 0, jumpFlag = 0;
 	int block;
 
+	print("Hello World\n\r");
+
 	//map_reset(map1);
 //  map_update(&car);
 
@@ -889,7 +941,7 @@ void battle_city() {
 	while (1) {
 
 		buttons = XIo_In32( XPAR_IO_PERIPH_BASEADDR );
-
+		car.object_in_the_path=0;
 		car.dir = DIR_STILL;
 		if (BTN_LEFT(buttons)) {
 			car.dir = DIR_LEFT;
@@ -911,7 +963,7 @@ void battle_city() {
 			car.dir = DIR_DOWN;
 		}
 		//car_move(map1, &car, d, start_jump);
-		obstackles_detection(&car);
+		detekcija_okoline(&car);
 		update_car_position(&car);
 		map_update(&car);
 
