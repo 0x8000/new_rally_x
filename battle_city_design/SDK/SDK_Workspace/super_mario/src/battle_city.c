@@ -120,8 +120,8 @@ typedef struct {
 } characters;
 
 characters mario = {
-		320,	                          // x
-		240, 		                     // y
+		800,	                          // x
+		640, 		                     // y
 		DIR_RIGHT,              		// dir
 		IMG_16x16_car_blue,  			// type
 
@@ -398,7 +398,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	u8 offset_x;
 	u8 offset_y;
 
-	int obstackle = 0;
+	int obstackle = 1;
 
 	if(dir == DIR_RIGHT){
 		mario->x+=3;
@@ -442,7 +442,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 
 
 
-	return b_false;
+	//return b_false;
 
 
 	while (brojac != 0) {
@@ -466,6 +466,56 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	roundX = floor(Xx / 16);
 	roundY = floor(Yy / 16);
 
+	if (obstackle == 1) {
+		if (dir == DIR_RIGHT) {
+			mario->x += 3;
+		}
+		x = mario->x;
+		y = mario->y;
+
+		offset_x = x & 0xf; // % 16
+
+		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
+				offset_x);
+
+		if (dir == DIR_LEFT) {
+			mario->x -= 3;
+		}
+		x = mario->x;
+		y = mario->y;
+
+		offset_x = x & 0xf; // % 16
+
+		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
+				offset_x);
+
+		if (dir == DIR_UP) {
+			mario->y -= 3;
+		}
+		x = mario->x;
+		y = mario->y;
+
+		offset_y = y & 0xf; // % 16
+
+		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
+				offset_y);
+		if (dir == DIR_DOWN) {
+			mario->y += 3;
+		}
+		x = mario->x;
+		y = mario->y;
+
+		offset_y = y & 0xf; // % 16
+
+		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
+				offset_y);
+
+		udario_u_blok = 0;
+	} else {
+		udario_u_blok = 1;
+	}
+
+	/*
 	switch (obstackle) {
 	case 0:{
 		udario_u_blok = 0;
@@ -533,7 +583,7 @@ static bool_t mario_move(unsigned char * map, characters * mario,
 	return b_false;
 }
 
-int obstackles_detection(int x, int y, int deoMape, unsigned char * map,
+int obstackles_detection(int x, int y, int deoMape, unsigned char * map,  //vraca 1 ako sme da se krece, 0 ako ne sme
 		int dir) {
 	unsigned char mario_position_right;
 	unsigned char mario_position_left;
@@ -556,23 +606,11 @@ int obstackles_detection(int x, int y, int deoMape, unsigned char * map,
 
 	if (dir == 1) {
 		switch (mario_position_right) {
-		case 0:
-			return 0;
-			break;
-		case 1:
+		case '0':
 			return 1;
 			break;
-		case 2:
-			return 2;
-			break;
-		case 3:
-			return 3;
-			break;
-		case 4:
-			return 4;
-			break;
-		case 5:
-			return 5;
+		default:
+			return 0;
 			break;
 
 		}
