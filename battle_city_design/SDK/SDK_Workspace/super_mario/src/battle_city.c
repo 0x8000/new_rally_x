@@ -44,7 +44,6 @@
 #define IMG_16x16_map_element_25			0x0880  //u
 #define IMG_16x16_rock			            0x08C0  //v
 #define IMG_16x16_smoke			            0x0900  //w
-
 // ***** MAP *****
 
 #define MAP_BASE_ADDRESS			    2368  // MAP_OFFSET in battle_city.vhd
@@ -58,7 +57,6 @@
 #define OFFSET_ROW_REG_OFFSET (4096+2048+0)
 #define OFFSET_COL_REG_OFFSET (4096+2048+1)
 #define STAT_IMG_SIZE_IS_16_REG_OFFSET (4096+2048+2)
-
 
 #define BTN_DOWN( b )                   ( !( b & 0x01 ) )
 #define BTN_UP( b )                     ( !( b & 0x10 ) )
@@ -85,6 +83,9 @@
 #define BASE_REG_L						0
 #define BASE_REG_H	                    1
 
+#define CAR_CENTAR_X                    320
+#define CAR_CENTAR_Y					240
+
 int lives = 0;
 int score = 0;
 int mapPart = 1;
@@ -93,10 +94,10 @@ int map_move = 0;
 int brojac = 0;
 int udario_u_blok = 0;
 
-int mario_se_pomerio = 0;
+int car_se_pomerio = 0;
 
-int mario_map_x = 16;
-int mario_map_y = 9;
+int car_map_x = 16;
+int car_map_y = 9;
 
 typedef enum {
 	b_false, b_true
@@ -112,6 +113,8 @@ typedef struct {
 	direction_t dir;
 	unsigned int type;
 
+	int object_in_the_path;
+
 	bool_t destroyed;
 
 	// Sta je reg_l, reg_h
@@ -119,12 +122,12 @@ typedef struct {
 	unsigned int reg_h;
 } characters;
 
-characters mario = {
-		800,	                          // x
-		640, 		                     // y
-		DIR_RIGHT,              		// dir
+characters car = { 783,	                          // x
+		656, 		                     // y
+		DIR_STILL,               			// dir
 		IMG_16x16_car_blue,  			// type
 
+		1, 								//object_in_the_path
 		b_false,                		// destroyed
 
 		TANK1_REG_L,            		// reg_l
@@ -142,41 +145,39 @@ characters enemie1 = { 331,						// x
 		TANK_AI_REG_H             		// reg_h
 		};
 /*
-characters enemie2 = { 450,						// x
-		431,						// y
-		DIR_LEFT,              		// dir
-		IMG_16x16_enemi1,  		// type
+ characters enemie2 = { 450,						// x
+ 431,						// y
+ DIR_LEFT,              		// dir
+ IMG_16x16_enemi1,  		// type
 
-		b_false,                		// destroyed
+ b_false,                		// destroyed
 
-		TANK_AI_REG_L2,            		// reg_l
-		TANK_AI_REG_H2             		// reg_h
-		};
+ TANK_AI_REG_L2,            		// reg_l
+ TANK_AI_REG_H2             		// reg_h
+ };
 
-characters enemie3 = { 330,						// x
-		272,						// y
-		DIR_LEFT,              		// dir
-		IMG_16x16_enemi1,  		// type
+ characters enemie3 = { 330,						// x
+ 272,						// y
+ DIR_LEFT,              		// dir
+ IMG_16x16_enemi1,  		// type
 
-		b_false,                		// destroyed
+ b_false,                		// destroyed
 
-		TANK_AI_REG_L3,            		// reg_l
-		TANK_AI_REG_H3             		// reg_h
-		};
+ TANK_AI_REG_L3,            		// reg_l
+ TANK_AI_REG_H3             		// reg_h
+ };
 
-characters enemie4 = { 635,						// x
-		431,						// y
-		DIR_LEFT,              		// dir
-		IMG_16x16_enemi1,  		// type
+ characters enemie4 = { 635,						// x
+ 431,						// y
+ DIR_LEFT,              		// dir
+ IMG_16x16_enemi1,  		// type
 
-		b_false,                		// destroyed
+ b_false,                		// destroyed
 
-		TANK_AI_REG_L4,            		// reg_l
-		TANK_AI_REG_H4             		// reg_h
-		};
-*/
-
-
+ TANK_AI_REG_L4,            		// reg_l
+ TANK_AI_REG_H4             		// reg_h
+ };
+ */
 
 unsigned int rand_lfsr113(void) {
 	static unsigned int z1 = 12345, z2 = 12345;
@@ -196,177 +197,174 @@ static void chhar_spawn(characters * chhar) {
 			(unsigned int )0x8F000000 | (unsigned int )chhar->type);
 	Xil_Out32(
 			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + chhar->reg_h ),
-			(chhar->y << 16) | chhar->x);
+			(240 << 16) | 320);
 }
 
-static void map_update(characters * mario) {
+static void map_update(characters * car) {
 	int x, y;
 
 	long int addr;
 
+	/*
+	 if(car_se_pomerio == 1){
+	 if((car->x >= 450) && (car->x <= 640)){
+	 if (udario_u_blok <= 0) {
+	 if(map_move < 10){
+	 map_move++;
+	 car->x--;
+	 }
+	 }
+	 }
+	 if((car->x >= 100) && (car->x <= 150)){
+	 if (udario_u_blok <= 0) {
+	 if(map_move < 10){
+	 map_move--;
+	 car->x++;
+	 }
+	 }
+	 }
 
-/*
-		if(mario_se_pomerio == 1){
-				if((mario->x >= 450) && (mario->x <= 640)){
-					if (udario_u_blok <= 0) {
-						if(map_move < 10){
-							map_move++;
-							mario->x--;
-						}
-					}
-				}
-				if((mario->x >= 100) && (mario->x <= 150)){
-									if (udario_u_blok <= 0) {
-										if(map_move < 10){
-											map_move--;
-											mario->x++;
-										}
-									}
-								}
+	 car_se_pomerio = 0;
+	 }
 
-				mario_se_pomerio = 0;
-		}
+	 */
 
-	*/
+	int current_car_map_x = car->x / 16;
+	int current_car_map_y = car->y / 16;
+	//printf(" map x is: %d",current_car_map_x);
 
-	int current_mario_map_x = mario->x /16;
-	int current_mario_map_y = mario->y /16;
-	//printf(" map x is: %d",current_mario_map_x);
+	int i = current_car_map_x - car_map_x;
+	int j = current_car_map_y - car_map_y;
 
-	int i = current_mario_map_x - mario_map_x;
-	int j = current_mario_map_y - mario_map_y;
-
-	mario_map_x = current_mario_map_x;
-	mario_map_y = current_mario_map_y;
-
+	car_map_x = current_car_map_x;
+	car_map_y = current_car_map_y;
 
 	float Xx;
 	float Yy;
 	int roundX = 0;
 	int roundY = 0;
 
-	Xx = mario->x;
-	Yy = mario->y;
+	Xx = car->x;
+	Yy = car->y;
 
 	roundX = floor(Xx / 16);
 	roundY = floor(Yy / 16);
 
-	int z,w;
+	int z, w;
 
 	for (y = 0; y < MAP_HEIGHT; y++) {
-			for (x = 0; x < MAP_WIDTH; x++) {
-				addr = XPAR_BATTLE_CITY_PERIPH_0_BASEADDR
-						+ 4 * (MAP_BASE_ADDRESS + y * MAP_WIDTH + x);
-				switch (map1[(roundY-15)+y][(roundX-20)+x]) {
-				//switch (map1[y][x]) {
-				case '0':
-					Xil_Out32(addr, IMG_16x16_background);
-					break;
-				case '1':
-					Xil_Out32(addr, IMG_16x16_bang);
-					break;
-				case '2':
-					Xil_Out32(addr, IMG_16x16_car_blue);
-					break;
-				case '3':
-					Xil_Out32(addr, IMG_16x16_car_red);
-					break;
-				case '4':
-					Xil_Out32(addr, IMG_16x16_flag);
-					break;
-				case '5':
-					Xil_Out32(addr, IMG_16x16_map_element_00);
-					break;
-				case '6':
-					Xil_Out32(addr, IMG_16x16_map_element_01);
-					break;
-				case '7':
-					Xil_Out32(addr, IMG_16x16_map_element_02);
-					break;
-				case '8':
-					Xil_Out32(addr, IMG_16x16_map_element_03);
-					break;
-				case '9':
-					Xil_Out32(addr, IMG_16x16_map_element_04);
-					break;
-				case 'a':
-					Xil_Out32(addr, IMG_16x16_map_element_05);
-					break;
-				case 'b':
-					Xil_Out32(addr, IMG_16x16_map_element_06);
-					break;
-				case 'c':
-					Xil_Out32(addr, IMG_16x16_map_element_07);
-					break;
-				case 'd':
-					Xil_Out32(addr, IMG_16x16_map_element_08);
-					break;
-				case 'e':
-					Xil_Out32(addr, IMG_16x16_map_element_09);
-					break;
-				case 'f':
-					Xil_Out32(addr, IMG_16x16_map_element_10);
-					break;
-				case 'g':
-					Xil_Out32(addr, IMG_16x16_map_element_11);
-					break;
-				case 'h':
-					Xil_Out32(addr, IMG_16x16_map_element_12);
-					break;
-				case 'i':
-					Xil_Out32(addr, IMG_16x16_map_element_13);
-					break;
-				case 'j':
-					Xil_Out32(addr, IMG_16x16_map_element_14);
-					break;
-				case 'k':
-					Xil_Out32(addr, IMG_16x16_map_element_15);
-					break;
-				case 'l':
-					Xil_Out32(addr, IMG_16x16_map_element_16);
-					break;
-				case 'm':
-					Xil_Out32(addr, IMG_16x16_map_element_17);
-					break;
-				case 'n':
-					Xil_Out32(addr, IMG_16x16_map_element_18);
-					break;
-				case 'o':
-					Xil_Out32(addr, IMG_16x16_map_element_19);
-					break;
-				case 'p':
-					Xil_Out32(addr, IMG_16x16_map_element_20);
-					break;
-				case 'q':
-					Xil_Out32(addr, IMG_16x16_map_element_21);
-					break;
-				case 'r':
-					Xil_Out32(addr, IMG_16x16_map_element_22);
-					break;
-				case 's':
-					Xil_Out32(addr, IMG_16x16_map_element_23);
-					break;
-				case 't':
-					Xil_Out32(addr, IMG_16x16_map_element_24);
-					break;
-				case 'u':
-					Xil_Out32(addr, IMG_16x16_map_element_25);
-					break;
-				case 'v':
-					Xil_Out32(addr,IMG_16x16_rock );
-					break;
-				case 'w':
-					Xil_Out32(addr, IMG_16x16_smoke);
-					break;
+		for (x = 0; x < MAP_WIDTH; x++) {
+			addr = XPAR_BATTLE_CITY_PERIPH_0_BASEADDR
+					+ 4 * (MAP_BASE_ADDRESS + y * MAP_WIDTH + x);
+			switch (map1[(roundY - 15) + y][(roundX - 20) + x]) {
+			//switch (map1[y][x]) {
+			case '0':
+				Xil_Out32(addr, IMG_16x16_background);
+				break;
+			case '1':
+				Xil_Out32(addr, IMG_16x16_bang);
+				break;
+			case '2':
+				Xil_Out32(addr, IMG_16x16_car_blue);
+				break;
+			case '3':
+				Xil_Out32(addr, IMG_16x16_car_red);
+				break;
+			case '4':
+				Xil_Out32(addr, IMG_16x16_flag);
+				break;
+			case '5':
+				Xil_Out32(addr, IMG_16x16_map_element_00);
+				break;
+			case '6':
+				Xil_Out32(addr, IMG_16x16_map_element_01);
+				break;
+			case '7':
+				Xil_Out32(addr, IMG_16x16_map_element_02);
+				break;
+			case '8':
+				Xil_Out32(addr, IMG_16x16_map_element_03);
+				break;
+			case '9':
+				Xil_Out32(addr, IMG_16x16_map_element_04);
+				break;
+			case 'a':
+				Xil_Out32(addr, IMG_16x16_map_element_05);
+				break;
+			case 'b':
+				Xil_Out32(addr, IMG_16x16_map_element_06);
+				break;
+			case 'c':
+				Xil_Out32(addr, IMG_16x16_map_element_07);
+				break;
+			case 'd':
+				Xil_Out32(addr, IMG_16x16_map_element_08);
+				break;
+			case 'e':
+				Xil_Out32(addr, IMG_16x16_map_element_09);
+				break;
+			case 'f':
+				Xil_Out32(addr, IMG_16x16_map_element_10);
+				break;
+			case 'g':
+				Xil_Out32(addr, IMG_16x16_map_element_11);
+				break;
+			case 'h':
+				Xil_Out32(addr, IMG_16x16_map_element_12);
+				break;
+			case 'i':
+				Xil_Out32(addr, IMG_16x16_map_element_13);
+				break;
+			case 'j':
+				Xil_Out32(addr, IMG_16x16_map_element_14);
+				break;
+			case 'k':
+				Xil_Out32(addr, IMG_16x16_map_element_15);
+				break;
+			case 'l':
+				Xil_Out32(addr, IMG_16x16_map_element_16);
+				break;
+			case 'm':
+				Xil_Out32(addr, IMG_16x16_map_element_17);
+				break;
+			case 'n':
+				Xil_Out32(addr, IMG_16x16_map_element_18);
+				break;
+			case 'o':
+				Xil_Out32(addr, IMG_16x16_map_element_19);
+				break;
+			case 'p':
+				Xil_Out32(addr, IMG_16x16_map_element_20);
+				break;
+			case 'q':
+				Xil_Out32(addr, IMG_16x16_map_element_21);
+				break;
+			case 'r':
+				Xil_Out32(addr, IMG_16x16_map_element_22);
+				break;
+			case 's':
+				Xil_Out32(addr, IMG_16x16_map_element_23);
+				break;
+			case 't':
+				Xil_Out32(addr, IMG_16x16_map_element_24);
+				break;
+			case 'u':
+				Xil_Out32(addr, IMG_16x16_map_element_25);
+				break;
+			case 'v':
+				Xil_Out32(addr, IMG_16x16_rock);
+				break;
+			case 'w':
+				Xil_Out32(addr, IMG_16x16_smoke);
+				break;
 
-				default:
-					Xil_Out32(addr, IMG_16x16_background);
-					break;
-				}
+			default:
+				Xil_Out32(addr, IMG_16x16_background);
+				break;
 			}
-
 		}
 
+	}
 
 }
 
@@ -382,307 +380,479 @@ static void map_reset(unsigned char * map) {
 
 }
 
-static bool_t mario_move(unsigned char * map, characters * mario,
-		direction_t dir, int start_jump) {
-
-
-
-	unsigned int x;
-	unsigned int y;
-	int i, j;
-
-	float Xx;
-	float Yy;
-	int roundX = 0;
-	int roundY = 0;
+void update_car_position(characters * car) {
 	u8 offset_x;
 	u8 offset_y;
+	if (car->object_in_the_path == 1) {
+		switch (car->dir) {
+		case DIR_RIGHT:
+			car->x += 3;
+			offset_x = car->x & 0xf; // % 16
 
-	int obstackle = 1;
-
-	if(dir == DIR_RIGHT){
-		mario->x+=3;
-	}
-	x = mario->x;
-	y = mario->y;
-
-	offset_x = x & 0xf; // % 16
-
-	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, offset_x);
-
-	if(dir == DIR_LEFT){
-			mario->x-=3;
-		}
-		x = mario->x;
-		y = mario->y;
-
-		offset_x = x & 0xf; // % 16
-
-		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, offset_x);
-
-	if(dir == DIR_UP){
-			mario->y-=3;
-		}
-		x = mario->x;
-		y = mario->y;
-
-		offset_y = y & 0xf; // % 16
-
-		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET, offset_y);
-	if(dir == DIR_DOWN){
-			mario->y+=3;
-		}
-		x = mario->x;
-		y = mario->y;
-
-		offset_y = y & 0xf; // % 16
-
-		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET, offset_y);
-
-
-
-
-	//return b_false;
-
-
-	while (brojac != 0) {
-		y++;
-		brojac--;
-	}
-
-	Xx = x;
-	Yy = y;
-
-	if (dir == DIR_LEFT) {
-		obstackle = obstackles_detection(x, y, mapPart, map, 2);
-	} else if (dir == DIR_RIGHT) {
-		obstackle = obstackles_detection(x, y, mapPart, map, 1);
-	} else if (dir == DIR_UP) {
-		obstackle = obstackles_detection(x, y, mapPart, map, 3);
-	} else if (dir == DIR_DOWN) {
-		obstackle = obstackles_detection(x, y, mapPart, map, 4);
-	}
-
-	roundX = floor(Xx / 16);
-	roundY = floor(Yy / 16);
-
-	if (obstackle == 1) {
-		if (dir == DIR_RIGHT) {
-			mario->x += 3;
-		}
-		x = mario->x;
-		y = mario->y;
-
-		offset_x = x & 0xf; // % 16
-
-		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
-				offset_x);
-
-		if (dir == DIR_LEFT) {
-			mario->x -= 3;
-		}
-		x = mario->x;
-		y = mario->y;
-
-		offset_x = x & 0xf; // % 16
-
-		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
-				offset_x);
-
-		if (dir == DIR_UP) {
-			mario->y -= 3;
-		}
-		x = mario->x;
-		y = mario->y;
-
-		offset_y = y & 0xf; // % 16
-
-		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
-				offset_y);
-		if (dir == DIR_DOWN) {
-			mario->y += 3;
-		}
-		x = mario->x;
-		y = mario->y;
-
-		offset_y = y & 0xf; // % 16
-
-		Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
-				offset_y);
-
-		udario_u_blok = 0;
-	} else {
-		udario_u_blok = 1;
-	}
-
-	/*
-	switch (obstackle) {
-	case 0:{
-		udario_u_blok = 0;
-	}
-	break;
-	case 2: {
-		//blok
-		if (dir == DIR_LEFT) {
-			Xil_Out32(OFFSET_COL_REG_OFFSET, 1);
-		} else if (dir == DIR_RIGHT) {
-			Xil_Out32(OFFSET_COL_REG_OFFSET, -1);
-		} else if (dir == DIR_UP) {
-			y++;
-		} else if (dir == DIR_DOWN) {
-			y--;
-		}
-
-		udario_u_blok = 1;
-	}
-		break;
-	case 3: {
-		//cigla
-
-		if (dir == DIR_LEFT) {
-			if (x > MAP_X * 16) {
-				x++;
-			}
-		} else if (dir == DIR_RIGHT) {
-			x--;
-		}
-		udario_u_blok = 1;
-	}
-		break;
-	case 5: {
-		//coin
-		score++;
-		map1[roundY + 1][roundX + 1] = 0;
-		map_update(&mario);
-	}
-		break;
-	default:
-		udario_u_blok = 0;
-	}
-
-	mario->x = x;
-	mario->y = y;
-
-	/*
-	if(dir == DIR_RIGHT){
-		if( (mario->x % 16) == 15)
 			Xil_Out32(
-						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + mario->reg_h ),
-						(((mario->y%16)+240) << 16) | (10)+320);
+					XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
+					offset_x);
 
+			break;
 
+		case DIR_LEFT:
+			car->x -= 3;
+			offset_x = car->x & 0xf; // % 16
+
+			Xil_Out32(
+					XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
+					offset_x);
+
+			break;
+		case DIR_UP:
+			car->y -= 3;
+			offset_y = car->y & 0xf; // % 16
+
+			Xil_Out32(
+					XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
+					offset_y);
+
+			break;
+		case DIR_DOWN:
+			car->y += 3;
+			offset_y = car->y & 0xf; // % 16
+
+			Xil_Out32(
+					XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
+					offset_y);
+
+			break;
+
+		}
 	}
 
-	else{
-	Xil_Out32(
-			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + mario->reg_h ),
-			(((mario->y%16)+240)  << 16) | (mario->x%16)+320);
-	}
-	*/
-
-	return b_false;
 }
 
-int obstackles_detection(int x, int y, int deoMape, unsigned char * map,  //vraca 1 ako sme da se krece, 0 ako ne sme
-		int dir) {
-	unsigned char mario_position_right;
-	unsigned char mario_position_left;
-	unsigned char mario_position_up;
-	unsigned char mario_position_down;
+/*static bool_t car_move(unsigned char * map, characters * car, direction_t dir,
+ int start_jump) {
 
-	float Xx = x;
-	float Yy = y;
+ unsigned int x;
+ unsigned int y;
+ int i, j;
+
+ float Xx;
+ float Yy;
+ int roundX = 0;
+ int roundY = 0;
+ u8 offset_x;
+ u8 offset_y;
+
+ int obstackle = 1;
+
+ if (dir == DIR_RIGHT) {
+ car->x += 3;
+ }
+ x = car->x;
+ y = car->y;
+
+ offset_x = x & 0xf; // % 16
+
+ Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
+ offset_x);
+
+ if (dir == DIR_LEFT) {
+ car->x -= 3;
+ }
+ x = car->x;
+ y = car->y;
+
+ offset_x = x & 0xf; // % 16
+
+ Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
+ offset_x);
+
+ if (dir == DIR_UP) {
+ car->y -= 3;
+ }
+ x = car->x;
+ y = car->y;
+
+ offset_y = y & 0xf; // % 16
+
+ Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
+ offset_y);
+ if (dir == DIR_DOWN) {
+ car->y += 3;
+ }
+ x = car->x;
+ y = car->y;
+
+ offset_y = y & 0xf; // % 16
+
+ Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
+ offset_y);
+
+ //return b_false;
+
+ while (brojac != 0) {
+ y++;
+ brojac--;
+ }
+
+ Xx = x;
+ Yy = y;
+
+ if (dir == DIR_LEFT) {
+ obstackle = obstackles_detection(x, y, mapPart, map, 2);
+ } else if (dir == DIR_RIGHT) {
+ obstackle = obstackles_detection(x, y, mapPart, map, 1);
+ } else if (dir == DIR_UP) {
+ obstackle = obstackles_detection(x, y, mapPart, map, 3);
+ } else if (dir == DIR_DOWN) {
+ obstackle = obstackles_detection(x, y, mapPart, map, 4);
+ }
+
+ roundX = floor(Xx / 16);
+ roundY = floor(Yy / 16);
+
+ if (obstackle == 1) {
+ if (dir == DIR_RIGHT) {
+ car->x += 3;
+ }
+ x = car->x;
+ y = car->y;
+
+ offset_x = x & 0xf; // % 16
+
+ Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
+ offset_x);
+
+ if (dir == DIR_LEFT) {
+ car->x -= 3;
+ }
+ x = car->x;
+ y = car->y;
+
+ offset_x = x & 0xf; // % 16
+
+ Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
+ offset_x);
+
+ if (dir == DIR_UP) {
+ car->y -= 3;
+ }
+ x = car->x;
+ y = car->y;
+
+ offset_y = y & 0xf; // % 16
+
+ Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
+ offset_y);
+ if (dir == DIR_DOWN) {
+ car->y += 3;
+ }
+ x = car->x;
+ y = car->y;
+
+ offset_y = y & 0xf; // % 16
+
+ Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
+ offset_y);
+
+ udario_u_blok = 0;
+ } else {
+ udario_u_blok = 1;
+ }
+
+ /*
+ switch (obstackle) {
+ case 0:{
+ udario_u_blok = 0;
+ }
+ break;
+ case 2: {
+ //blok
+ if (dir == DIR_LEFT) {
+ Xil_Out32(OFFSET_COL_REG_OFFSET, 1);
+ } else if (dir == DIR_RIGHT) {
+ Xil_Out32(OFFSET_COL_REG_OFFSET, -1);
+ } else if (dir == DIR_UP) {
+ y++;
+ } else if (dir == DIR_DOWN) {
+ y--;
+ }
+
+ udario_u_blok = 1;
+ }
+ break;
+ case 3: {
+ //cigla
+
+ if (dir == DIR_LEFT) {
+ if (x > MAP_X * 16) {
+ x++;
+ }
+ } else if (dir == DIR_RIGHT) {
+ x--;
+ }
+ udario_u_blok = 1;
+ }
+ break;
+ case 5: {
+ //coin
+ score++;
+ map1[roundY + 1][roundX + 1] = 0;
+ map_update(&car);
+ }
+ break;
+ default:
+ udario_u_blok = 0;
+ }
+
+ car->x = x;
+ car->y = y;
+
+ /*
+ if(dir == DIR_RIGHT){
+ if( (car->x % 16) == 15)
+ Xil_Out32(
+ XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + car->reg_h ),
+ (((car->y%16)+240) << 16) | (10)+320);
+
+
+ }
+
+ else{
+ Xil_Out32(
+ XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + car->reg_h ),
+ (((car->y%16)+240)  << 16) | (car->x%16)+320);
+ }
+
+
+ return b_false;
+ }*/
+
+int obstackles_detection(characters *car) {
+	float fx = car->x;
+	float fy = car->y;
 
 	int roundX = 0;
 	int roundY = 0;
 
-	roundX = floor(Xx / 16);
-	roundY = floor(Yy / 16);
+	roundX = floor(fx / 16);
+	roundY = floor(fy / 16);
 
-	mario_position_right = map1[roundY + 1][roundX + 1];
-	mario_position_left = map1[roundY + 1][roundX];
-	mario_position_up = map1[roundY][roundX];
-	mario_position_down = map1[roundY + 1][roundX];
+	int next_1 = 0;
+	int next_2 = 0;
 
-	if (dir == 1) {
-		switch (mario_position_right) {
+	if (car->dir == DIR_RIGHT) {
+		switch (map1[roundY][roundX + 1]) {
 		case '0':
-			return 1;
+			next_1 = 1;
 			break;
+		/*case '4':
+			next_1 = 2;
+			break;*/
 		default:
-			return 0;
+			next_1 = 0;
 			break;
-
 		}
-	} else if (dir == 2) {
-		switch (mario_position_left) {
-		case 0:
-			return 0;
+		switch (map1[roundY + 1][roundX + 1]) {
+		case '0':
+			next_2 = 1;
 			break;
-		case 1:
-			return 1;
+		/*case '4':
+			next_2 = 2;
+			break;*/
+		default:
+			next_2 = 0;
 			break;
-		case 2:
-			return 2;
-			break;
-		case 3:
-			return 3;
-			break;
-		case 4:
-			return 4;
-			break;
-		case 5:
-			return 5;
-			break;
-
-		}
-	} else if (dir == 3) {
-		switch (mario_position_up) {
-		case 0:
-			return 0;
-			break;
-		case 1:
-			return 1;
-			break;
-		case 2:
-			return 2;
-			break;
-		case 3:
-			return 3;
-			break;
-		case 4:
-			return 4;
-			break;
-		case 5:
-			return 5;
-			break;
-
-		}
-	} else if (dir == 4) {
-		switch (mario_position_down) {
-		case 0:
-			return 0;
-			break;
-		case 1:
-			return 1;
-			break;
-		case 2:
-			return 2;
-			break;
-		case 3:
-			return 3;
-			break;
-		case 4:
-			return 4;
-			break;
-		case 5:
-			return 5;
-			break;
-
 		}
 	}
+	if (next_1 != 0 && next_2 !=0 ) {
+		car->object_in_the_path = 1;
+
+	} else
+		car->object_in_the_path = 0;
+
+	if (car->dir == DIR_LEFT) {
+		switch (map1[roundY][roundX - 1]) {
+		case '0':
+			next_1 = 1;
+			break;
+		case '4':
+			next_1 = 2;
+			break;
+		default:
+			next_1 = 0;
+			break;
+		}
+		switch (map1[roundY + 1][roundX - 1]) {
+		case '0':
+			next_2 = 1;
+			break;
+		case '4':
+			next_2 = 2;
+			break;
+		default:
+			next_2 = 0;
+			break;
+		}
+	}
+	if (next_1 != 0 && next_2 !=0) {
+		car->object_in_the_path = 1;
+
+	} else
+		car->object_in_the_path = 0;
+
+	if (car->dir == DIR_UP) {
+		switch (map1[roundY - 1][roundX]) {
+		case '0':
+			next_1 = 1;
+			break;
+		case '4':
+			next_1 = 2;
+			break;
+		default:
+			next_1 = 0;
+			break;
+		}
+		switch (map1[roundY - 1][roundX + 1]) {
+		case '0':
+			next_2 = 1;
+			break;
+		case '4':
+			next_2 = 1;
+			break;
+		default:
+			next_2 = 0;
+			break;
+		}
+	}
+	if (next_1 != 0 && next_2 !=0) {
+		car->object_in_the_path = 1;
+
+	} else
+		car->object_in_the_path = 0;
+
+	if (car->dir == DIR_DOWN) {
+		switch (map1[roundY + 1][roundX]) {
+		case '0':
+			next_1 = 1;
+			break;
+		case '4':
+			next_1 = 2;
+			break;
+		default:
+			next_1 = 0;
+			break;
+		}
+		switch (map1[roundY + 1][roundX + 1]) {
+		case '0':
+			next_2 = 1;
+			break;
+		case '4':
+			next_2 = 2;
+			break;
+		default:
+			next_2 = 0;
+			break;
+		}
+	}
+	if (next_1 != 0 && next_2 !=0) {
+		car->object_in_the_path = 1;
+
+	} else
+		car->object_in_the_path = 0;
+
+	return 1;
 
 }
+
+/*int obstackles_detection(int x, int y, int deoMape, unsigned char * map,  //vraca 1 ako sme da se krece, 0 ako ne sme
+ int dir) {
+ unsigned char car_position_right;
+ unsigned char car_position_left;
+ unsigned char car_position_up;
+ unsigned char car_position_down;
+
+ float Xx = x;
+ float Yy = y;
+
+ int roundX = 0;
+ int roundY = 0;
+
+ roundX = floor(Xx / 16);
+ roundY = floor(Yy / 16);
+
+ car_position_right = map1[roundY + 1][roundX + 1];
+ car_position_left = map1[roundY + 1][roundX];
+ car_position_up = map1[roundY][roundX];
+ car_position_down = map1[roundY + 1][roundX];
+
+ if (dir == 1) {
+ switch (car_position_right) {
+ case '0':
+ return 1;
+ break;
+ default:
+ return 0;
+ break;
+
+ }
+ } else if (dir == 2) {
+ switch (car_position_left) {
+ case '1':
+ return 1;
+ break;
+ default:
+ return 0;
+ break;
+
+
+ }
+ } else if (dir == 3) {
+ switch (car_position_up) {
+ case 0:
+ return 0;
+ break;
+ case 1:
+ return 1;
+ break;
+ case 2:
+ return 2;
+ break;
+ case 3:
+ return 3;
+ break;
+ case 4:
+ return 4;
+ break;
+ case 5:
+ return 5;
+ break;
+
+ }
+ } else if (dir == 4) {
+ switch (car_position_down) {
+ case 0:
+ return 0;
+ break;
+ case 1:
+ return 1;
+ break;
+ case 2:
+ return 2;
+ break;
+ case 3:
+ return 3;
+ break;
+ case 4:
+ return 4;
+ break;
+ case 5:
+ return 5;
+ break;
+
+ }
+ }
+
+ }*/
 
 void battle_city() {
 
@@ -691,17 +861,17 @@ void battle_city() {
 	int block;
 
 	//map_reset(map1);
-//  map_update(&mario);
+//  map_update(&car);
 
 	//chhar_spawn(&enemie1);
 	//chhar_spawn(&enemie2);
 	//chhar_spawn(&enemie3);
 	//chhar_spawn(&enemie4);
 #if 0
-	chhar_spawn(&mario);
+	chhar_spawn(&car);
 #elif 0
-	chhar_spawn(&mario);
-	map_update(&mario);
+	chhar_spawn(&car);
+	map_update(&car);
 
 	// TODO Testing.
 	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, 8);
@@ -712,37 +882,38 @@ void battle_city() {
 			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + 9 ),
 			0);
 #else
-	chhar_spawn(&mario);
-	map_update(&mario);
+	chhar_spawn(&car);
 
+	map_update(&car);
 
 	while (1) {
 
 		buttons = XIo_In32( XPAR_IO_PERIPH_BASEADDR );
 
-		direction_t d = DIR_STILL;
+		car.dir = DIR_STILL;
 		if (BTN_LEFT(buttons)) {
-			d = DIR_LEFT;
+			car.dir = DIR_LEFT;
 		} else if (BTN_RIGHT(buttons)) {
-			d = DIR_RIGHT;
+			car.dir = DIR_RIGHT;
 		}
 
 		int start_jump = 0;
 		/*
-		if (BTN_UP (buttons) && (BTN_LEFT(buttons) || BTN_RIGHT(buttons))) {
-			start_jump = 1;
-		}
-		*/
+		 if (BTN_UP (buttons) && (BTN_LEFT(buttons) || BTN_RIGHT(buttons))) {
+		 start_jump = 1;
+		 }
+		 */
 
 		if (BTN_UP (buttons) && !BTN_LEFT(buttons) && !BTN_RIGHT(buttons)) {
-			d = DIR_UP;
+			car.dir = DIR_UP;
 		}
 		if (BTN_DOWN (buttons) && !BTN_LEFT(buttons) && !BTN_RIGHT(buttons)) {
-			d = DIR_DOWN;
+			car.dir = DIR_DOWN;
 		}
-		mario_move(map1, &mario, d, start_jump);
-
-		map_update(&mario);
+		//car_move(map1, &car, d, start_jump);
+		obstackles_detection(&car);
+		update_car_position(&car);
+		map_update(&car);
 
 		for (i = 0; i < 100000; i++) {
 		}
