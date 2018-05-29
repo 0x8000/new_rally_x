@@ -122,6 +122,9 @@ typedef struct {
 	// Sta je reg_l, reg_h
 	unsigned int reg_l;
 	unsigned int reg_h;
+
+	unsigned int collected_flags;
+	unsigned int lives;
 } characters;
 
 characters car = { 783,	                          // x
@@ -133,7 +136,11 @@ characters car = { 783,	                          // x
 		b_false,                		// destroyed
 
 		TANK1_REG_L,            		// reg_l
-		TANK1_REG_H             		// reg_h
+		TANK1_REG_H,             		// reg_h
+
+		0,
+		3
+
 		};
 
 characters enemie1 = { 331,						// x
@@ -313,6 +320,7 @@ static void map_update(characters * car) {
 
 }
 
+#if 0
 static void map_reset(unsigned char * map) {
 
 	unsigned int i;
@@ -324,6 +332,7 @@ static void map_reset(unsigned char * map) {
 	}
 
 }
+#endif
 
 void update_car_position(characters * car) {
 	u8 offset_x;
@@ -389,10 +398,7 @@ void update_car_position(characters * car) {
 
 }
 
-
 int provera( int x, int y){
-
-
 	float fx = x;
 	float fy = y;
 
@@ -402,8 +408,28 @@ int provera( int x, int y){
 		return 1;
 	else if (map1[roundY][roundX]=='4'){
 		map1[roundY][roundX]='0';
-		number_of_flags +=1;
-		return 1;}
+
+		(&car)->collected_flags++;
+
+		return 1;
+	} else if (map1[roundY][roundX]=='v'){
+
+		(&car)->lives--;
+
+		map1[roundY][roundX]='1';  // bang bang!
+		map_update(&car);
+
+		unsigned int i;
+		for(i = 0; i < 10000000; i++);
+
+		map1[roundY][roundX]='0';
+
+		if((&car)->lives == 0){
+			start_new_game(&car);
+		}
+
+		return 0;
+	}
 	else return 0;
 }
 
@@ -439,6 +465,7 @@ int detekcija_okoline(characters *car) {
 	}
 }
 
+#if 0
 int obstackles_detection(characters *car) {
 	float fx = car->x;
 	float fy = car->y;
@@ -573,11 +600,13 @@ int obstackles_detection(characters *car) {
 	return 1;
 
 }
+#endif
 
 void start_new_game(characters *car){
 	chhar_spawn(car);
 
-
+	car->x = 783;
+	car->y = 656;
 
 	map_update(car);
 }
