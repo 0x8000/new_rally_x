@@ -386,7 +386,7 @@ void update_car_position(characters * car) {
 	if (car->object_in_the_path == 1) {
 		switch (car->dir) {
 		case DIR_RIGHT:
-			car->x += 1;
+			car->x += 2;
 			offset_x = car->x & 0xf; // % 16
 
 			Xil_Out32(
@@ -396,7 +396,7 @@ void update_car_position(characters * car) {
 			break;
 
 		case DIR_LEFT:
-			car->x -= 1;
+			car->x -= 2;
 			offset_x = car->x & 0xf; // % 16
 
 			Xil_Out32(
@@ -405,7 +405,7 @@ void update_car_position(characters * car) {
 
 			break;
 		case DIR_UP:
-			car->y -= 1;
+			car->y -= 2;
 			offset_y = car->y & 0xf; // % 16
 
 			Xil_Out32(
@@ -414,7 +414,7 @@ void update_car_position(characters * car) {
 
 			break;
 		case DIR_DOWN:
-			car->y += 1;
+			car->y += 2;
 			offset_y = car->y & 0xf; // % 16
 
 			Xil_Out32(
@@ -643,29 +643,29 @@ int provera( int x, int y){
 int detekcija_okoline(characters *car) {
 
 	if (car->dir == DIR_RIGHT) {
-		if (provera(car->x + 13, car->y+2) == 1
-				&& (provera(car->x + 13, car->y + 13) == 1)) {
+		if (provera(car->x + 16, car->y+2) == 1
+				&& (provera(car->x + 16, car->y + 14) == 1)) {
 			car->object_in_the_path = 1;
 			//moze da se pomeri
 		}
 	}
 	if (car->dir == DIR_LEFT) {
-		if (provera(car->x - 1, car->y+1) == 1
-				&& (provera(car->x - 1, car->y + 13) == 1)) {
+		if (provera(car->x , car->y+2) == 1
+				&& (provera(car->x , car->y + 14) == 1)) {
 			car->object_in_the_path = 1;
 			//moze da se pomeri
 		}
 	}
 	if (car->dir == DIR_UP) {
-		if (provera(car->x+1, car->y - 1) == 1
-				&& (provera(car->x + 13, car->y - 1) == 1)) {
+		if (provera(car->x +2, car->y ) == 1
+				&& (provera(car->x + 14, car->y) == 1)) {
 			car->object_in_the_path = 1;
 			//moze da se pomeri
 		}
 	}
 	if (car->dir == DIR_DOWN) {
-		if (provera(car->x+1, car->y + 13) == 1
-				&& (provera(car->x + 13, car->y + 13) == 1)) {
+		if (provera(car->x+2, car->y + 16) == 1
+				&& (provera(car->x +12 , car->y + 16) == 1)) {
 			car->object_in_the_path = 1;
 			//moze da se pomeri
 		}
