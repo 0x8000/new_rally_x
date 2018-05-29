@@ -574,7 +574,13 @@ int obstackles_detection(characters *car) {
 
 }
 
+void start_new_game(characters *car){
+	chhar_spawn(car);
 
+
+
+	map_update(car);
+}
 
 void battle_city() {
 
@@ -582,9 +588,12 @@ void battle_city() {
 	int i, change = 0, jumpFlag = 0;
 	int block;
 
-	print("Hello World\n\r");
-
 	chhar_spawn(&car);
+
+	car.x = 783;
+	car.y = 656;
+
+	// TODO: Kada kliknemo na reset dugme, da igra pocne od pocetka
 
 	map_update(&car);
 
