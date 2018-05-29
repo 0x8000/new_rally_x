@@ -94,6 +94,8 @@ int map_move = 0;
 int brojac = 0;
 int udario_u_blok = 0;
 
+int number_of_flags = 0;
+
 int car_se_pomerio = 0;
 
 int car_map_x = 16;
@@ -144,40 +146,7 @@ characters enemie1 = { 331,						// x
 		TANK_AI_REG_L,            		// reg_l
 		TANK_AI_REG_H             		// reg_h
 		};
-/*
- characters enemie2 = { 450,						// x
- 431,						// y
- DIR_LEFT,              		// dir
- IMG_16x16_enemi1,  		// type
 
- b_false,                		// destroyed
-
- TANK_AI_REG_L2,            		// reg_l
- TANK_AI_REG_H2             		// reg_h
- };
-
- characters enemie3 = { 330,						// x
- 272,						// y
- DIR_LEFT,              		// dir
- IMG_16x16_enemi1,  		// type
-
- b_false,                		// destroyed
-
- TANK_AI_REG_L3,            		// reg_l
- TANK_AI_REG_H3             		// reg_h
- };
-
- characters enemie4 = { 635,						// x
- 431,						// y
- DIR_LEFT,              		// dir
- IMG_16x16_enemi1,  		// type
-
- b_false,                		// destroyed
-
- TANK_AI_REG_L4,            		// reg_l
- TANK_AI_REG_H4             		// reg_h
- };
- */
 
 unsigned int rand_lfsr113(void) {
 	static unsigned int z1 = 12345, z2 = 12345;
@@ -194,7 +163,7 @@ unsigned int rand_lfsr113(void) {
 static void chhar_spawn(characters * chhar) {
 	Xil_Out32(
 			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + chhar->reg_l ),
-			(unsigned int )0x8F000000 | (unsigned int )chhar->type);
+			(unsigned int )0x8F010000 | (unsigned int )chhar->type);
 	Xil_Out32(
 			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + chhar->reg_h ),
 			(240 << 16) | 320);
@@ -205,33 +174,9 @@ static void map_update(characters * car) {
 
 	long int addr;
 
-	/*
-	 if(car_se_pomerio == 1){
-	 if((car->x >= 450) && (car->x <= 640)){
-	 if (udario_u_blok <= 0) {
-	 if(map_move < 10){
-	 map_move++;
-	 car->x--;
-	 }
-	 }
-	 }
-	 if((car->x >= 100) && (car->x <= 150)){
-	 if (udario_u_blok <= 0) {
-	 if(map_move < 10){
-	 map_move--;
-	 car->x++;
-	 }
-	 }
-	 }
-
-	 car_se_pomerio = 0;
-	 }
-
-	 */
 
 	int current_car_map_x = car->x / 16;
 	int current_car_map_y = car->y / 16;
-	//printf(" map x is: %d",current_car_map_x);
 
 	int i = current_car_map_x - car_map_x;
 	int j = current_car_map_y - car_map_y;
@@ -257,7 +202,7 @@ static void map_update(characters * car) {
 			addr = XPAR_BATTLE_CITY_PERIPH_0_BASEADDR
 					+ 4 * (MAP_BASE_ADDRESS + y * MAP_WIDTH + x);
 			switch (map1[(roundY - 15) + y][(roundX - 20) + x]) {
-			//switch (map1[y][x]) {
+
 			case '0':
 				Xil_Out32(addr, IMG_16x16_background);
 				break;
@@ -393,6 +338,10 @@ void update_car_position(characters * car) {
 					XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
 					offset_x);
 
+			Xil_Out32(
+						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + car->reg_l ),
+						(unsigned int )0x8F000000 | (unsigned int )car->type);
+
 			break;
 
 		case DIR_LEFT:
@@ -403,6 +352,10 @@ void update_car_position(characters * car) {
 					XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
 					offset_x);
 
+			Xil_Out32(
+						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + car->reg_l ),
+						(unsigned int )0x8F020000 | (unsigned int )car->type);
+
 			break;
 		case DIR_UP:
 			car->y -= 2;
@@ -411,6 +364,10 @@ void update_car_position(characters * car) {
 			Xil_Out32(
 					XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
 					offset_y);
+
+			Xil_Out32(
+						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + car->reg_l ),
+						(unsigned int )0x8F010000 | (unsigned int )car->type);
 
 			break;
 		case DIR_DOWN:
@@ -421,6 +378,10 @@ void update_car_position(characters * car) {
 					XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
 					offset_y);
 
+			Xil_Out32(
+						XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + car->reg_l ),
+						(unsigned int )0x8F100000 | (unsigned int )car->type);
+
 			break;
 
 		}
@@ -428,204 +389,6 @@ void update_car_position(characters * car) {
 
 }
 
-/*static bool_t car_move(unsigned char * map, characters * car, direction_t dir,
- int start_jump) {
-
- unsigned int x;
- unsigned int y;
- int i, j;
-
- float Xx;
- float Yy;
- int roundX = 0;
- int roundY = 0;
- u8 offset_x;
- u8 offset_y;
-
- int obstackle = 1;
-
- if (dir == DIR_RIGHT) {
- car->x += 3;
- }
- x = car->x;
- y = car->y;
-
- offset_x = x & 0xf; // % 16
-
- Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
- offset_x);
-
- if (dir == DIR_LEFT) {
- car->x -= 3;
- }
- x = car->x;
- y = car->y;
-
- offset_x = x & 0xf; // % 16
-
- Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
- offset_x);
-
- if (dir == DIR_UP) {
- car->y -= 3;
- }
- x = car->x;
- y = car->y;
-
- offset_y = y & 0xf; // % 16
-
- Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
- offset_y);
- if (dir == DIR_DOWN) {
- car->y += 3;
- }
- x = car->x;
- y = car->y;
-
- offset_y = y & 0xf; // % 16
-
- Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
- offset_y);
-
- //return b_false;
-
- while (brojac != 0) {
- y++;
- brojac--;
- }
-
- Xx = x;
- Yy = y;
-
- if (dir == DIR_LEFT) {
- obstackle = obstackles_detection(x, y, mapPart, map, 2);
- } else if (dir == DIR_RIGHT) {
- obstackle = obstackles_detection(x, y, mapPart, map, 1);
- } else if (dir == DIR_UP) {
- obstackle = obstackles_detection(x, y, mapPart, map, 3);
- } else if (dir == DIR_DOWN) {
- obstackle = obstackles_detection(x, y, mapPart, map, 4);
- }
-
- roundX = floor(Xx / 16);
- roundY = floor(Yy / 16);
-
- if (obstackle == 1) {
- if (dir == DIR_RIGHT) {
- car->x += 3;
- }
- x = car->x;
- y = car->y;
-
- offset_x = x & 0xf; // % 16
-
- Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
- offset_x);
-
- if (dir == DIR_LEFT) {
- car->x -= 3;
- }
- x = car->x;
- y = car->y;
-
- offset_x = x & 0xf; // % 16
-
- Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET,
- offset_x);
-
- if (dir == DIR_UP) {
- car->y -= 3;
- }
- x = car->x;
- y = car->y;
-
- offset_y = y & 0xf; // % 16
-
- Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
- offset_y);
- if (dir == DIR_DOWN) {
- car->y += 3;
- }
- x = car->x;
- y = car->y;
-
- offset_y = y & 0xf; // % 16
-
- Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET,
- offset_y);
-
- udario_u_blok = 0;
- } else {
- udario_u_blok = 1;
- }
-
- /*
- switch (obstackle) {
- case 0:{
- udario_u_blok = 0;
- }
- break;
- case 2: {
- //blok
- if (dir == DIR_LEFT) {
- Xil_Out32(OFFSET_COL_REG_OFFSET, 1);
- } else if (dir == DIR_RIGHT) {
- Xil_Out32(OFFSET_COL_REG_OFFSET, -1);
- } else if (dir == DIR_UP) {
- y++;
- } else if (dir == DIR_DOWN) {
- y--;
- }
-
- udario_u_blok = 1;
- }
- break;
- case 3: {
- //cigla
-
- if (dir == DIR_LEFT) {
- if (x > MAP_X * 16) {
- x++;
- }
- } else if (dir == DIR_RIGHT) {
- x--;
- }
- udario_u_blok = 1;
- }
- break;
- case 5: {
- //coin
- score++;
- map1[roundY + 1][roundX + 1] = 0;
- map_update(&car);
- }
- break;
- default:
- udario_u_blok = 0;
- }
-
- car->x = x;
- car->y = y;
-
- /*
- if(dir == DIR_RIGHT){
- if( (car->x % 16) == 15)
- Xil_Out32(
- XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + car->reg_h ),
- (((car->y%16)+240) << 16) | (10)+320);
-
-
- }
-
- else{
- Xil_Out32(
- XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + car->reg_h ),
- (((car->y%16)+240)  << 16) | (car->x%16)+320);
- }
-
-
- return b_false;
- }*/
 
 int provera( int x, int y){
 
@@ -637,6 +400,10 @@ int provera( int x, int y){
 	u8 roundY = y >> 4;
 	if(map1[roundY][roundX]=='0')
 		return 1;
+	else if (map1[roundY][roundX]=='4'){
+		map1[roundY][roundX]='0';
+		number_of_flags +=1;
+		return 1;}
 	else return 0;
 }
 
@@ -675,14 +442,7 @@ int detekcija_okoline(characters *car) {
 int obstackles_detection(characters *car) {
 	float fx = car->x;
 	float fy = car->y;
-	/*
-	int roundX = 0;
-	int roundY = 0;
 
-
-	roundX = (int)(fx / 16);
-	roundY = (int)(fy / 16);
-	*/
 
 	u8 roundX = (car->x) >> 4;
 	u8 roundY = (car->y) >> 4;
@@ -695,9 +455,9 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_1 = 1;
 			break;
-		/*case '4':
+		case '4':
 			next_1 = 2;
-			break;*/
+			break;
 		default:
 			next_1 = 0;
 			break;
@@ -706,9 +466,9 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_2 = 1;
 			break;
-		/*case '4':
+		case '4':
 			next_2 = 2;
-			break;*/
+			break;
 		default:
 			next_2 = 0;
 			break;
@@ -725,9 +485,9 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_1 = 1;
 			break;
-		/*case '4':
+		case '4':
 			next_1 = 2;
-			break;*/
+			break;
 		default:
 			next_1 = 0;
 			break;
@@ -736,9 +496,9 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_2 = 1;
 			break;
-		/*case '4':
+		case '4':
 			next_2 = 2;
-			break;*/
+			break;
 		default:
 			next_2 = 0;
 			break;
@@ -755,9 +515,9 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_1 = 1;
 			break;
-		/*case '4':
+		case '4':
 			next_1 = 2;
-			break;*/
+			break;
 		default:
 			next_1 = 0;
 			break;
@@ -766,9 +526,9 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_2 = 1;
 			break;
-		/*case '4':
+		case '4':
 			next_2 = 1;
-			break;*/
+			break;
 		default:
 			next_2 = 0;
 			break;
@@ -785,9 +545,9 @@ int obstackles_detection(characters *car) {
 		case '0':
 			next_1 = 1;
 			break;
-		/*case '4':
+		case '4':
 			next_1 = 2;
-			break;*/
+			break;
 		default:
 			next_1 = 0;
 			break;
@@ -814,95 +574,7 @@ int obstackles_detection(characters *car) {
 
 }
 
-/*int obstackles_detection(int x, int y, int deoMape, unsigned char * map,  //vraca 1 ako sme da se krece, 0 ako ne sme
- int dir) {
- unsigned char car_position_right;
- unsigned char car_position_left;
- unsigned char car_position_up;
- unsigned char car_position_down;
 
- float Xx = x;
- float Yy = y;
-
- int roundX = 0;
- int roundY = 0;
-
- roundX = floor(Xx / 16);
- roundY = floor(Yy / 16);
-
- car_position_right = map1[roundY + 1][roundX + 1];
- car_position_left = map1[roundY + 1][roundX];
- car_position_up = map1[roundY][roundX];
- car_position_down = map1[roundY + 1][roundX];
-
- if (dir == 1) {
- switch (car_position_right) {
- case '0':
- return 1;
- break;
- default:
- return 0;
- break;
-
- }
- } else if (dir == 2) {
- switch (car_position_left) {
- case '1':
- return 1;
- break;
- default:
- return 0;
- break;
-
-
- }
- } else if (dir == 3) {
- switch (car_position_up) {
- case 0:
- return 0;
- break;
- case 1:
- return 1;
- break;
- case 2:
- return 2;
- break;
- case 3:
- return 3;
- break;
- case 4:
- return 4;
- break;
- case 5:
- return 5;
- break;
-
- }
- } else if (dir == 4) {
- switch (car_position_down) {
- case 0:
- return 0;
- break;
- case 1:
- return 1;
- break;
- case 2:
- return 2;
- break;
- case 3:
- return 3;
- break;
- case 4:
- return 4;
- break;
- case 5:
- return 5;
- break;
-
- }
- }
-
- }*/
 
 void battle_city() {
 
@@ -912,28 +584,6 @@ void battle_city() {
 
 	print("Hello World\n\r");
 
-	//map_reset(map1);
-//  map_update(&car);
-
-	//chhar_spawn(&enemie1);
-	//chhar_spawn(&enemie2);
-	//chhar_spawn(&enemie3);
-	//chhar_spawn(&enemie4);
-#if 0
-	chhar_spawn(&car);
-#elif 0
-	chhar_spawn(&car);
-	map_update(&car);
-
-	// TODO Testing.
-	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_COL_REG_OFFSET, 8);
-	Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*OFFSET_ROW_REG_OFFSET, 8);
-	//Xil_Out32(XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4*, 1);
-
-	Xil_Out32(
-			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + 9 ),
-			0);
-#else
 	chhar_spawn(&car);
 
 	map_update(&car);
@@ -949,20 +599,13 @@ void battle_city() {
 			car.dir = DIR_RIGHT;
 		}
 
-		int start_jump = 0;
-		/*
-		 if (BTN_UP (buttons) && (BTN_LEFT(buttons) || BTN_RIGHT(buttons))) {
-		 start_jump = 1;
-		 }
-		 */
-
 		if (BTN_UP (buttons) && !BTN_LEFT(buttons) && !BTN_RIGHT(buttons)) {
 			car.dir = DIR_UP;
 		}
 		if (BTN_DOWN (buttons) && !BTN_LEFT(buttons) && !BTN_RIGHT(buttons)) {
 			car.dir = DIR_DOWN;
 		}
-		//car_move(map1, &car, d, start_jump);
+
 		detekcija_okoline(&car);
 		update_car_position(&car);
 		map_update(&car);
@@ -971,5 +614,4 @@ void battle_city() {
 		}
 
 	}
-#endif
 }
