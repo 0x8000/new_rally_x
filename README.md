@@ -1,13 +1,13 @@
-#Notes
-* Register (representing sprite object)
-	- x_coordinate [2B]
-	- Y_coordinate [2B]
-	- Rotation     [1B]
-	- Size&En	   [1B]
-	- Pointer      [2B]
- **NOTE:** MSB - En; LSB - Size;
+# New Rally X
 
- * Map memory (representing map object)
-	- Z_coordinate [1B]
-	- Rotation	   [1B]
-	- Index 	   [2B]
+Projekat na predmetu Logičko projektovanje računarskih sistema 2 na katedri za računarsku tehniku i računarske komunikacije
+Novi Sad, 2018
+
+![Screenshot](https://i.imgur.com/Ya7kS5Rr.jpg)
+
+Prezentacija: [pdf](#)
+Youtube video: [video](#)
+
+BIT fajl: [bit](#)
+
+Tim: [Aleksa](https://github.com/0x8000), [Danka](https://github.com/dankaradovanovic), [Nemanja](https://github.com/nemus95), [Sara](https://github.com/sarabrancic)
