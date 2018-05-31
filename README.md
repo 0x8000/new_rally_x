@@ -5,7 +5,7 @@ Novi Sad, 2018
 
 ![Screenshot](https://i.imgur.com/Ya7kS5Rr.jpg)
 
-Prezentacija: [pdf](#)
+Prezentacija: [pdf](https://github.com/0x8000/new_rally_x/blob/master/Prezentacija%2C%20dokumentacija.pdf)
 Youtube: [video](https://youtu.be/18Z-5beB13A)
 
 BIT fajl: [bit](https://github.com/0x8000/new_rally_x/blob/master/NewRallyX.bit)
