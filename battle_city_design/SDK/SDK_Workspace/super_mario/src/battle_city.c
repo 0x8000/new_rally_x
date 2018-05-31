@@ -532,6 +532,8 @@ void print_lives(characters *car) {
 }
 
 void start_new_game(characters *car) {
+	int i, j;
+
 	chhar_spawn(car);
 
 	car->x = 783;
@@ -539,6 +541,14 @@ void start_new_game(characters *car) {
 
 	car->lives = 3;
 	car->collected_flags = 0;
+
+	// Spawn flags and rocks again
+	for (i = 0; i < 80; i++){
+		for(j = 0; j < 100; j++){
+			map1[i][j] = map1_original[i][j];
+		}
+	}
+
 	print_lives(car);
 	print_flags(car);
 	map_update(car);
