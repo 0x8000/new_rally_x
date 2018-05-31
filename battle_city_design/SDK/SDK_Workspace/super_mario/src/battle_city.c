@@ -597,13 +597,6 @@ void battle_city() {
 	unsigned int i;
 	unsigned int buttons;
 
-	Xil_Out32(
-			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + TANK_AI_REG_L ),
-			(unsigned int )0x8F000000 | (unsigned int ) 1);
-	Xil_Out32(
-			XPAR_BATTLE_CITY_PERIPH_0_BASEADDR + 4 * ( SPRITES_REG_OFFSET + TANK_AI_REG_H ),
-			(24 << 16) | 24);
-
 	start_new_game(&car);
 
 	map_update(&car);
