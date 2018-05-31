@@ -369,6 +369,8 @@ void update_car_position(characters * car) {
  * Provera kolizije sa bitnim objektima
  */
 int provera(int x, int y) {
+	unsigned int i;
+
 	float fx = x;
 	float fy = y;
 
@@ -383,6 +385,12 @@ int provera(int x, int y) {
 
 		(&car)->collected_flags++;
 		print_flags(&car);
+		map_update(&car);
+
+		if ((&car)->collected_flags == 3) {
+			for (i = 0; i < 10000000; i++);  // wait for a bit
+			start_new_game(&car);
+		}
 
 		return 1;
 
@@ -394,9 +402,7 @@ int provera(int x, int y) {
 		print_lives(&car);
 		map_update(&car);
 
-		unsigned int i;
-		for (i = 0; i < 10000000; i++)
-			;
+		for (i = 0; i < 10000000; i++);
 
 		map1[roundY][roundX] = '0';
 
@@ -532,7 +538,7 @@ void print_lives(characters *car) {
 }
 
 void start_new_game(characters *car) {
-	int i, j;
+	unsigned int i, j;
 
 	chhar_spawn(car);
 
@@ -551,6 +557,7 @@ void start_new_game(characters *car) {
 
 	print_lives(car);
 	print_flags(car);
+
 	map_update(car);
 }
 
@@ -611,7 +618,7 @@ void battle_city() {
 
 	map_update(&car);
 	print_lives(&car);
-	car.lives = 3;
+
 	while (1) {
 
 		buttons = XIo_In32( XPAR_IO_PERIPH_BASEADDR );
